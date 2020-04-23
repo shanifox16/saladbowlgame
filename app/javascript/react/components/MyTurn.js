@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import Countdown from 'react-countdown';
 
-let turnLength = 10000
+let turnLength = 59000
 let remainingTime = turnLength
 let time
+let correct = 0
 
 export const MyTurn = (props) => {
   const [gameStarted, setGameStarted] = useState(false)
@@ -90,6 +91,7 @@ export const MyTurn = (props) => {
     .then(response => response.json())
     .then(body => {
       if (!!body.id) {
+        correct += 1
         let entryList = entries.filter(entry => entry.id !== currentEntry.id)
         if (entryList.length > 0) {
           setEntries(entryList)
@@ -122,12 +124,14 @@ export const MyTurn = (props) => {
               if (body.number === 4) {
                 remainingTime = turnLength
               }
+              correct = 0
               setTimesUp(true)
             } else {
               alert("Yikes, we couldn't record your answer. That's our bad.")
             }
           })
           .catch(error => console.error(`Error in fetch: ${error.message}`))
+          correct = 0
           setTimesUp(true)
         }
       } else {
@@ -150,15 +154,16 @@ export const MyTurn = (props) => {
       setSkippedAnswers([])
       getRandomEntry(skippedAnswers)
     } else {
+      correct = 0
       setTimesUp(true)
     }
   }
 
   const timeFormat = ({ seconds, completed }) => {
     if (completed) {
-      return <span>Time's Up!</span>
+      return <p className="countdown-timer">Time's Up!</p>
     } else {
-      return <span>:{seconds}</span>;
+      return <p className="countdown-timer">:{seconds}</p>;
     }
   }
 
@@ -183,6 +188,7 @@ export const MyTurn = (props) => {
     .then(response => response.json())
     .then(body => {
       if (!!body.id) {
+        correct = 0
         setTimesUp(true)
       } else {
         alert("Yikes, we couldn't record your answer. That's our bad.")
@@ -196,6 +202,7 @@ export const MyTurn = (props) => {
   }
 
   if (gameStarted && entries.length === 0 && timesUp === false) {
+    correct = 0
     setTimesUp(true)
   }
 
@@ -206,12 +213,12 @@ export const MyTurn = (props) => {
   return (
     <div>
       {!gameStarted && (
-        <form onSubmit={handleStart}>
-          <input type="submit" value="START" />
+        <form className="start-button-container" onSubmit={handleStart}>
+          <input className="submit-button start-button" type="submit" value="START" />
         </form>
       )}
       {gameStarted && currentEntry && (
-        <span>
+        <span className="my-turn-container">
           <Countdown
             start={startTimer}
             onTick={saveSecondsRemaining}
@@ -219,14 +226,17 @@ export const MyTurn = (props) => {
             date={time}
             renderer={timeFormat}
           />
-          <p>{currentEntry.name}</p>
 
-          <form onSubmit={handleCorrect}>
-            <input type="submit" value="Got it! Next Word" />
-          </form>
-          <form onSubmit={handleSkip}>
-            <input type="submit" value="Skip! Next Word" />
-          </form>
+        <p className="entry-name">{currentEntry.name}</p>
+
+          <div className="turn-buttons row">
+            <button onClick={handleCorrect} type="button" className="submit-button column">Got it! Next Word</button>
+            <button onClick={handleSkip} type="button" className="submit-button column">Skip! Next Word</button>
+          </div>
+          <div className="turn-buttons row">
+            <div className="column"># Correct: {correct}</div>
+            <div className="column"># Skipped: {skippedAnswers.length}</div>
+          </div>
         </span>
       )}
     </div>

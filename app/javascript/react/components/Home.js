@@ -53,13 +53,16 @@ export const Home = (props) => {
   }
 
   return (
-    <div>
+    <div className="home-screen">
       <p>Welcome to Salad Bowl!</p>
       <p>Here are the rules!</p>
-      <ol>
-        <li>Rule 1</li>
-        <li>Rule 2</li>
-      </ol>
+      <div className="rules-list">
+        <ol>
+          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, sapien eu accumsan porttitor, turpis.</li>
+          <li>Vestibulum sit amet consequat lectus, eget molestie felis. Ut et enim ac justo facilisis lobortis.</li>
+          <li>In at dui non nunc pharetra congue. In sit amet nisl facilisis neque mattis malesuada.</li>
+        </ol>
+      </div>
 
       <form onSubmit={letsPlay}>
         <input type="submit" class="submit-button" value="Let's Play!" />

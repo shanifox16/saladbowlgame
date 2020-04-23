@@ -1,6 +1,47 @@
 .app {
-  // background: image-url("../images/salad-bowl.jpg");
   background-image: url('https://salad-bowl.s3.us-east-1.amazonaws.com/salad-bowl.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: rgba(255, 255, 255, 0.75);
+  background-blend-mode: lighten;
+}
+
+.top-bar {
+  background-color: transparent;
+
+  .header-text {
+    font-family: 'Baloo Tamma 2', cursive;
+    color: black;
+  }
+}
+
+.submit-button {
+  margin: 20px;
+  padding: 10px;
+  border-radius: 5px;
+  border-color: #FF9E9D;
+  background-color: #FF9E9D;
+  cursor: pointer;
+}
+
+.refresh-button {
+  border-radius: 5px;
+  border-color: #e0dcdc;
+  background-color: #e0dcdc;
+  cursor: pointer;
+}
+
+.home-screen {
+  text-align: center;
+
+  .rules-list {
+    border-style: solid;
+    border-color: black;
+    text-align: left;
+    width: 40%;
+    margin: 0 30% 0 30%;
+    padding: 25px 25px 10px 25px;
+  }
 }
 
 .scoreboard {
@@ -19,21 +60,49 @@ table {
 }
 
 .Red {
-  background-color: #fccfcf;
+  background-color: #fccfcf30;
+  opacity: .8;
   height: 100vh;
 }
 
 .Blue {
-  background-color: #b6dcfa;
+  background-color: #b6dcfa30;
   height: 100vh;
 }
 
 .reset-button {
   text-align: right;
-  margin: 60px 15px 0 0;
+  margin: 5px 15px 0 0;
 }
 
 .entry-form {
   width: 60%;
   margin: 2% 20% 0 20%;
+}
+
+.start-button-container {
+  text-align: center;
+  font-family: 'Baloo Tamma 2', cursive;
+  font-size: 3em;
+  margin-top: 7%;
+}
+
+.start-button {
+  padding: 30px 30px 20px 30px;
+}
+
+.countdown-timer {
+  text-align: center;
+  border-radius: 25px;
+  font-family: 'Baloo Tamma 2';
+  font-size: 5em;
+}
+
+.my-turn-container {
+  text-align: center;
+}
+
+.entry-name {
+  font-family: 'Baloo Tamma 2', cursive;
+  font-size: 6em;
 }

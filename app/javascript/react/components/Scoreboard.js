@@ -139,7 +139,7 @@ export const Scoreboard = (props) => {
               <tr>
                 <th>
                   <form onSubmit={() => window.location.reload()}>
-                    <input type="submit" class="submit-button" value="Refresh" />
+                    <input type="submit" class="refresh-button" value="Refresh" />
                   </form>
                 </th>
                 <th>Red</th>
