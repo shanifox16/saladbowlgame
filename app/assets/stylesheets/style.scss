@@ -1,0 +1,39 @@
+.app {
+  // background: image-url("../images/salad-bowl.jpg");
+  background-image: url('https://salad-bowl.s3.us-east-1.amazonaws.com/salad-bowl.jpg');
+}
+
+.scoreboard {
+  text-align: center;
+}
+
+table {
+  th {
+    text-align: center;
+  }
+
+  text-align: center;
+  border-color: black;
+  margin: 0 30% 0 30%;
+  width: 40%;
+}
+
+.Red {
+  background-color: #fccfcf;
+  height: 100vh;
+}
+
+.Blue {
+  background-color: #b6dcfa;
+  height: 100vh;
+}
+
+.reset-button {
+  text-align: right;
+  margin: 60px 15px 0 0;
+}
+
+.entry-form {
+  width: 60%;
+  margin: 2% 20% 0 20%;
+}
