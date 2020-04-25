@@ -149,13 +149,10 @@ export const MyTurn = (props) => {
     if (entryList.length > 0) {
       setEntries(entryList)
       getRandomEntry(entryList)
-    } else if (skippedAnswers.length > 0) {
+    } else {
       setEntries([...skippedAnswers, currentEntry])
       setSkippedAnswers([])
-      getRandomEntry(skippedAnswers)
-    } else {
-      correct = 0
-      setTimesUp(true)
+      getRandomEntry([...skippedAnswers, currentEntry])
     }
   }
 
