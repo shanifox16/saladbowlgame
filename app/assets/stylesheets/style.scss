@@ -102,7 +102,13 @@ table {
 }
 
 .start-button {
-  padding: 30px 30px 20px 30px;
+  padding: 30px 40px 25px 40px;
+  border-radius: 30px;
+}
+
+.my-turn-container {
+  width: 100%;
+  max-width: 1920px;
 }
 
 .countdown-timer {
@@ -169,5 +175,21 @@ table {
   .details-number {
     font-size: 2.5em;
     margin: -15px;
+  }
+
+  @media (max-width: 1000px) {
+    .entry-name {
+      padding: 0;
+      height: 275px;
+      width: 275px;
+    }
+
+    .entry-inner-div {
+      font-size: 1.3em;
+    }
+
+    .details-number {
+      font-size: 1.8em;
+    }
   }
 }
