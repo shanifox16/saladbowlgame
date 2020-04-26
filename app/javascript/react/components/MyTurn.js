@@ -215,7 +215,7 @@ export const MyTurn = (props) => {
         </form>
       )}
       {gameStarted && currentEntry && (
-        <span className="my-turn-container">
+        <div className="my-turn-container">
           <Countdown
             start={startTimer}
             onTick={saveSecondsRemaining}
@@ -224,7 +224,11 @@ export const MyTurn = (props) => {
             renderer={timeFormat}
           />
 
-        <p className="entry-name">{currentEntry.name}</p>
+        <div className="entry-name">
+          <div className="entry-inner-div">
+            {currentEntry.name}
+          </div>
+        </div>
 
           <div className="turn-buttons row">
             <button onClick={handleCorrect} type="button" className="submit-button column">Got it! Next Word</button>
@@ -234,7 +238,7 @@ export const MyTurn = (props) => {
             <div className="column"># Correct: {correct}</div>
             <div className="column"># Skipped: {skippedAnswers.length}</div>
           </div>
-        </span>
+        </div>
       )}
     </div>
   )

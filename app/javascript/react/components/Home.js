@@ -55,13 +55,12 @@ export const Home = (props) => {
   return (
     <div className="home-screen">
       <p>Welcome to Salad Bowl!</p>
-      <p>Here are the rules!</p>
       <div className="rules-list">
-        <ol>
-          <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed posuere, sapien eu accumsan porttitor, turpis.</li>
-          <li>Vestibulum sit amet consequat lectus, eget molestie felis. Ut et enim ac justo facilisis lobortis.</li>
-          <li>In at dui non nunc pharetra congue. In sit amet nisl facilisis neque mattis malesuada.</li>
-        </ol>
+        <p style={{textAlign: "center"}}>How to play:</p>
+        <p>First, each player will submit 5 names of people or fictional characters. Then, players will separate into two equal teams to compete in three rounds.&nbsp;</p>
+        <p>Round 1: When the first player clicks "My Turn," they will see one name at a time. They will need to use words (no hand gestures) to get their teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
+        <p>Round 2: This round is similar, except the player giving clues can only say one word for each name. They can repeat the word as many times as desired.</p>
+        <p>Round 3: Charades! (no talking allowed)</p>
       </div>
 
       <form onSubmit={letsPlay}>

@@ -1,4 +1,5 @@
 .app {
+  // background-color: #FCF2E6;
   background-image: url('https://salad-bowl.s3.us-east-1.amazonaws.com/salad-bowl.jpg');
   background-repeat: no-repeat;
   background-size: cover;
@@ -95,14 +96,35 @@ table {
   text-align: center;
   border-radius: 25px;
   font-family: 'Baloo Tamma 2';
-  font-size: 5em;
+  font-weight: lighter;
+  font-size: 3em;
 }
 
 .my-turn-container {
   text-align: center;
+  // background-image: url("circleshadow.jpg");
+  // background-repeat: no-repeat;
+  // background-size: cover;
 }
 
 .entry-name {
   font-family: 'Baloo Tamma 2', cursive;
-  font-size: 6em;
+  font-weight: lighter;
+  font-size: 2.5em;
+  border: solid 1px black;
+  box-shadow: 10px 10px  rgba(0,0,0,0.6);
+  -moz-box-shadow: 10px 10px  rgba(0,0,0,0.6);
+  -webkit-box-shadow: 10px 10px  rgba(0,0,0,0.6);
+  -o-box-shadow: 10px 10px  rgba(0,0,0,0.6);
+  margin: 0 auto;
+  border-radius: 1000px;
+  padding: 5%;
+  height: 450px;
+  width: 450px;
+}
+
+.entry-inner-div {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
 }

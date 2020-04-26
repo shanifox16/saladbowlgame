@@ -87,7 +87,8 @@ export const Form = (props) => {
   return (
     <span className="form-page">
       <form onSubmit={handleSubmit} className="entry-form">
-        <h4>Welcome to Salad Bowl! Before we play, we need you to submit 5 names!</h4>
+        <h5>To prepare for your game, please submit 5 names of people or fictional characters.</h5>
+        <h5>Players will need to guess these names later on, so they shouldn't be too obscure.</h5>
         <ErrorList
           errors={errors}
           />

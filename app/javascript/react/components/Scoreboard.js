@@ -113,6 +113,7 @@ export const Scoreboard = (props) => {
           <p>Prepare for Round 1</p>
           <p>The <strong>{currentTeam}</strong> team will go first</p>
           <p>Once all players have finished submitting 5 names, the first player should click &quot;My Turn&quot;</p>
+          <p>Use words (no hand gestures) to get your teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
         </span>
       )}
       {currentRound === 4 && (
@@ -128,8 +129,17 @@ export const Scoreboard = (props) => {
       {currentRound !== 0 && currentRound !== 4 && (
         <span>
           <p>Scoreboard:</p>
-          <p>It is <strong>{currentTeam}</strong>&apos;s turn</p>
           <p>Current Round: <strong>{currentRound}</strong></p>
+          {currentRound === 1 && (
+            <p>Use words (no hand gestures) to get your teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
+          )}
+          {currentRound === 2 && (
+            <p>You can can only say one word for each name. You can repeat the word as many times as desired, or even sing it.</p>
+          )}
+          {currentRound === 3 && (
+            <p>Charades! (no talking allowed)</p>
+          )}
+          <p>It is <strong>{currentTeam}</strong>&apos;s turn</p>
           <p>Remaining Names: <strong>{entriesLeftInRound}</strong></p>
         </span>
       )}
