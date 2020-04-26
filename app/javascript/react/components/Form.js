@@ -97,6 +97,7 @@ export const Form = (props) => {
             className="entry"
             type="text"
             id="entryOne"
+            maxlength="25"
             value={entryFields.entryOne}
             onChange={handleInputChange}
             />
@@ -106,6 +107,7 @@ export const Form = (props) => {
             className="entry"
             type="text"
             id="entryTwo"
+            maxlength="25"
             value={entryFields.entryTwo}
             onChange={handleInputChange}
             />
@@ -115,6 +117,7 @@ export const Form = (props) => {
             className="entry"
             type="text"
             id="entryThree"
+            maxlength="25"
             value={entryFields.entryThree}
             onChange={handleInputChange}
             />
@@ -124,6 +127,7 @@ export const Form = (props) => {
             className="entry"
             type="text"
             id="entryFour"
+            maxlength="25"
             value={entryFields.entryFour}
             onChange={handleInputChange}
             />
@@ -133,6 +137,7 @@ export const Form = (props) => {
             className="entry"
             type="text"
             id="entryFive"
+            maxlength="25"
             value={entryFields.entryFive}
             onChange={handleInputChange}
             />

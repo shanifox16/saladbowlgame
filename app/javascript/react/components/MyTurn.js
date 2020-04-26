@@ -224,19 +224,27 @@ export const MyTurn = (props) => {
             renderer={timeFormat}
           />
 
-        <div className="entry-name">
-          <div className="entry-inner-div">
-            {currentEntry.name}
-          </div>
-        </div>
-
-          <div className="turn-buttons row">
-            <button onClick={handleCorrect} type="button" className="submit-button column">Got it! Next Word</button>
-            <button onClick={handleSkip} type="button" className="submit-button column">Skip! Next Word</button>
-          </div>
-          <div className="turn-buttons row">
-            <div className="column"># Correct: {correct}</div>
-            <div className="column"># Skipped: {skippedAnswers.length}</div>
+          <div className="outer-div grid-x grid-margin-x" >
+            <div className="cell large-2 medium-0 small-0"></div>
+            <div className="cell large-2 medium-12 small-12 details">
+              <div className="details-number">{skippedAnswers.length}</div>
+              <div>skipped</div>
+            </div>
+            <div className="cell large-4 medium-12 small-12 entry-name">
+              <div className="entry-inner-div">
+                {currentEntry.name}
+              </div>
+              <br />
+              <div className="turn-buttons">
+                <button onClick={handleSkip} type="button" className="skip-button">Skip</button>
+                <button onClick={handleCorrect} type="button" className="correct-button">Got it!</button>
+              </div>
+            </div>
+            <div className="cell large-2 medium-12 small-12 details">
+              <div className="details-number">{correct}</div>
+              <div>correct</div>
+            </div>
+            <div className="cell large-2 medium-0 small-0"></div>
           </div>
         </div>
       )}
