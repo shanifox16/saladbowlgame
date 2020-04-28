@@ -15,6 +15,8 @@ export const MyTurn = (props) => {
   const [startTimer, setStartTimer] = useState(false)
   const [pauseTimer, setPauseTimer] = useState(false)
   const [timesUp, setTimesUp] = useState(false)
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
+  const buzzer = new Audio("https://freesound.org/data/previews/414/414208_6938106-lq.mp3")
 
   useEffect(() => {
     fetch(`/api/v1/entries`)
@@ -70,76 +72,79 @@ export const MyTurn = (props) => {
 
   const handleCorrect = event => {
     event.preventDefault()
-    fetch(`/api/v1/entries/${currentEntry.id}`, {
-      credentials: "same-origin",
-      method: 'PATCH',
-      body: JSON.stringify(currentEntry),
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      }
-    })
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-         error = new Error(errorMessage);
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(body => {
-      if (!!body.id) {
-        correct += 1
-        let entryList = entries.filter(entry => entry.id !== currentEntry.id)
-        if (entryList.length > 0) {
-          setEntries(entryList)
-          getRandomEntry(entryList)
-        } else if (skippedAnswers.length > 0) {
-          setEntries(skippedAnswers)
-          setSkippedAnswers([])
-          getRandomEntry(skippedAnswers)
-        } else {
-          fetch('/api/v1/rounds/1', {
-            credentials: "same-origin",
-            method: 'PATCH',
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json"
-            }
-          })
-          .then(response => {
-            if (response.ok) {
-              return response;
-            } else {
-              let errorMessage = `${response.status} (${response.statusText})`,
-               error = new Error(errorMessage);
-              throw(error);
-            }
-          })
-          .then(response => response.json())
-          .then(body => {
-            if (!!body.id) {
-              if (body.number === 4) {
-                remainingTime = turnLength
-              }
-              correct = 0
-              setTimesUp(true)
-            } else {
-              alert("Yikes, we couldn't record your answer. That's our bad.")
-            }
-          })
-          .catch(error => console.error(`Error in fetch: ${error.message}`))
-          correct = 0
-          setTimesUp(true)
+    if (event.type === "click" || (event.type === "keydown" && event.key === "Enter")) {
+      fetch(`/api/v1/entries/${currentEntry.id}`, {
+        credentials: "same-origin",
+        method: 'PATCH',
+        body: JSON.stringify(currentEntry),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
         }
-      } else {
-        alert("Yikes, we couldn't record your answer. That's our bad.")
-      }
-    })
-    .catch(error => console.error(`Error in fetch: ${error.message}`))
-
+      })
+      .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          let errorMessage = `${response.status} (${response.statusText})`,
+          error = new Error(errorMessage);
+          throw(error);
+        }
+      })
+      .then(response => response.json())
+      .then(body => {
+        if (!!body.id) {
+          correct += 1
+          let entryList = entries.filter(entry => entry.id !== currentEntry.id)
+          if (entryList.length > 0) {
+            setEntries(entryList)
+            getRandomEntry(entryList)
+          } else if (skippedAnswers.length > 0) {
+            setEntries(skippedAnswers)
+            setSkippedAnswers([])
+            getRandomEntry(skippedAnswers)
+          } else {
+            fetch('/api/v1/rounds/1', {
+              credentials: "same-origin",
+              method: 'PATCH',
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+              }
+            })
+            .then(response => {
+              if (response.ok) {
+                return response;
+              } else {
+                let errorMessage = `${response.status} (${response.statusText})`,
+                error = new Error(errorMessage);
+                throw(error);
+              }
+            })
+            .then(response => response.json())
+            .then(body => {
+              if (!!body.id) {
+                if (body.number === 4) {
+                  remainingTime = turnLength
+                }
+                correct = 0
+                setTimesUp(true)
+              } else {
+                alert("Yikes, we couldn't record your answer. That's our bad.")
+              }
+            })
+            .catch(error => console.error(`Error in fetch: ${error.message}`))
+            correct = 0
+            setTimesUp(true)
+          }
+        } else {
+          alert("Yikes, we couldn't record your answer. That's our bad.")
+        }
+      })
+      .catch(error => console.error(`Error in fetch: ${error.message}`))
+    }
+    setIsButtonDisabled(true)
+    setTimeout(() => setIsButtonDisabled(false), 1000)
   }
 
   const handleSkip = event => {
@@ -165,6 +170,7 @@ export const MyTurn = (props) => {
   }
 
   const timesUpFunction = () => {
+    buzzer.play()
     fetch('/api/v1/teams/1', {
       credentials: "same-origin",
       method: 'PATCH',
@@ -236,8 +242,8 @@ export const MyTurn = (props) => {
               </div>
               <br />
               <div className="turn-buttons">
-                <button onClick={handleSkip} type="button" className="skip-button">Skip</button>
-                <button onClick={handleCorrect} type="button" className="correct-button">Got it!</button>
+                <button onClick={handleSkip} type="button" tabIndex="-1" className="skip-button">Skip</button>
+                <button disabled={isButtonDisabled} onClick={handleCorrect} tabIndex="0" autofocus type="button" className="correct-button">Got it!</button>
               </div>
             </div>
             <div className="cell large-2 medium-12 small-12 details">

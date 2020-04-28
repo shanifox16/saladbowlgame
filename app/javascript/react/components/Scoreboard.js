@@ -51,23 +51,25 @@ export const Scoreboard = (props) => {
 
   const resetGame = (event) => {
     event.preventDefault()
-    fetch(`/api/v1/notifications/reset`)
-    .then(response => {
-      if (response.ok) {
-        return response;
-      } else {
-        let errorMessage = `${response.status} (${response.statusText})`,
-          error = new Error(errorMessage)
-        throw(error);
-      }
-    })
-    .then(response => response.json())
-    .then(entries => {
-      setRedirectPath("/")
-    })
-    .catch(error => console.error(`Error in fetch: ${error.message}`))
+    if (window.confirm("Are you sure you want to start a new game? All of the data from this game will be deleted.")) {
+      fetch(`/api/v1/notifications/reset`)
+      .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          let errorMessage = `${response.status} (${response.statusText})`,
+            error = new Error(errorMessage)
+          throw(error);
+        }
+      })
+      .then(response => response.json())
+      .then(entries => {
+        setRedirectPath("/")
+      })
+      .catch(error => console.error(`Error in fetch: ${error.message}`))
+    }
   }
-
+  
   const myTurn = (event) => {
     event.preventDefault()
     if (currentRound === 0) {
@@ -189,7 +191,7 @@ export const Scoreboard = (props) => {
       )}
       <br />
       <form className="reset-button" onSubmit={resetGame}>
-        <input type="submit" class="submit-button" value="Clear Data and Start New Game" />
+        <input type="submit" class="submit-button" value="Reset and Start New Game" />
       </form>
     </div>
   )
