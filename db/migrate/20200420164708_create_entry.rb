@@ -2,6 +2,7 @@ class CreateEntry < ActiveRecord::Migration[5.2]
   def change
     create_table :entries do |t|
       t.string :name, null: false
+      t.belongs_to :game
       t.boolean :round_one_is_complete, null: false, default: false
       t.string :round_one_winner
       t.boolean :round_two_is_complete, null: false, default: false

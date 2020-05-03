@@ -3,16 +3,18 @@ Rails.application.routes.draw do
   devise_for :users
 
   get '/', to: 'homes#index'
-  get '/form', to: 'homes#index'
-  get '/scoreboard', to: 'homes#index'
-  get '/myturn', to: 'homes#index'
+  get '/game/:url/form', to: 'homes#index'
+  get '/game/:url/scoreboard', to: 'homes#index'
+  get '/game/:url/myturn', to: 'homes#index'
 
   namespace :api do
     namespace :v1 do
-      resources :entries, only: [:index, :show, :create, :update]
-      resources :teams, only: [:update]
-      resources :rounds, only: [:index, :update]
-      resources :notifications, only: [:index, :show]
+      resources :games, only: [:index, :show, :create] do
+        resources :entries, only: [:index, :show, :create, :update]
+        resources :notifications, only: [:index, :show]
+        resources :rounds, only: [:index, :update]
+        resources :teams, only: [:update]
+      end
     end
   end
 end

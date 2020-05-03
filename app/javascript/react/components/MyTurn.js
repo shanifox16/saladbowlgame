@@ -17,9 +17,10 @@ export const MyTurn = (props) => {
   const [timesUp, setTimesUp] = useState(false)
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
   const buzzer = new Audio("https://freesound.org/data/previews/414/414208_6938106-lq.mp3")
+  const url = props.match.params.url
 
   useEffect(() => {
-    fetch(`/api/v1/entries`)
+    fetch(`/api/v1/games/${url}/entries`)
     .then(response => {
       if (response.ok) {
         return response;
@@ -35,7 +36,7 @@ export const MyTurn = (props) => {
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
 
-    fetch(`/api/v1/rounds`)
+    fetch(`/api/v1/games/${url}/rounds`)
     .then(response => {
       if (response.ok) {
         return response;
@@ -73,7 +74,7 @@ export const MyTurn = (props) => {
   const handleCorrect = event => {
     event.preventDefault()
     if (event.type === "click" || (event.type === "keydown" && event.key === "Enter")) {
-      fetch(`/api/v1/entries/${currentEntry.id}`, {
+      fetch(`/api/v1/games/${url}/entries/${currentEntry.id}`, {
         credentials: "same-origin",
         method: 'PATCH',
         body: JSON.stringify(currentEntry),
@@ -104,7 +105,7 @@ export const MyTurn = (props) => {
             setSkippedAnswers([])
             getRandomEntry(skippedAnswers)
           } else {
-            fetch('/api/v1/rounds/1', {
+            fetch(`/api/v1/games/${url}/rounds/1`, {
               credentials: "same-origin",
               method: 'PATCH',
               headers: {
@@ -124,7 +125,7 @@ export const MyTurn = (props) => {
             .then(response => response.json())
             .then(body => {
               if (!!body.id) {
-                if (body.number === 4) {
+                if (body.round === 4) {
                   remainingTime = turnLength
                 }
                 correct = 0
@@ -159,6 +160,8 @@ export const MyTurn = (props) => {
       setSkippedAnswers([])
       getRandomEntry([...skippedAnswers, currentEntry])
     }
+    setIsButtonDisabled(true)
+    setTimeout(() => setIsButtonDisabled(false), 1000)
   }
 
   const timeFormat = ({ seconds, completed }) => {
@@ -171,7 +174,7 @@ export const MyTurn = (props) => {
 
   const timesUpFunction = () => {
     buzzer.play()
-    fetch('/api/v1/teams/1', {
+    fetch(`/api/v1/games/${url}/teams/1`, {
       credentials: "same-origin",
       method: 'PATCH',
       headers: {
@@ -210,7 +213,7 @@ export const MyTurn = (props) => {
   }
 
   if (timesUp) {
-    return <Redirect to="/scoreboard" />
+    return <Redirect to={`/game/${url}/scoreboard`} />
   }
 
   return (
@@ -242,7 +245,7 @@ export const MyTurn = (props) => {
               </div>
               <br />
               <div className="turn-buttons">
-                <button onClick={handleSkip} type="button" tabIndex="-1" className="skip-button">Skip</button>
+                <button disabled={isButtonDisabled} onClick={handleSkip} type="button" tabIndex="-1" className="skip-button">Skip</button>
                 <button disabled={isButtonDisabled} onClick={handleCorrect} tabIndex="0" autofocus type="button" className="correct-button">Got it!</button>
               </div>
             </div>

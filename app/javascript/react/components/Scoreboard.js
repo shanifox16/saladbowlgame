@@ -12,12 +12,14 @@ export const Scoreboard = (props) => {
   const [blueScoreRoundThree, setBlueScoreRoundThree] = useState(0)
   const [blueScoreTotal, setBlueScoreTotal] = useState(0)
   const [entriesLeftInRound, setEntriesLeftInRound] = useState(0)
+  const [totalEntries, setTotalEntries] = useState(null)
   const [currentTeam, setCurrentTeam] = useState(null)
   const [currentRound, setCurrentRound] = useState(1)
   const [redirectPath, setRedirectPath] = useState(null)
+  const url = props.match.params.url
 
   useEffect(() => {
-    fetch('/api/v1/notifications')
+    fetch(`/api/v1/games/${url}/notifications`)
     .then(response => {
       if (response.ok) {
         return response;
@@ -38,6 +40,7 @@ export const Scoreboard = (props) => {
       setBlueScoreRoundThree(data.blue_score_round_three.length)
       setBlueScoreTotal(data.blue_score_total)
       setEntriesLeftInRound(data.entries_left_in_round)
+      setTotalEntries(data.total_entries.length)
       setCurrentTeam(data.current_team)
       setCurrentRound(data.current_round)
     })
@@ -45,14 +48,14 @@ export const Scoreboard = (props) => {
 
     const timeout = setTimeout(() => {
       setTimer(timer + 1);
-    }, 5000)
+    }, 3000)
     return () => clearTimeout(timeout)
   }, [timer])
 
   const resetGame = (event) => {
     event.preventDefault()
-    if (window.confirm("Are you sure you want to start a new game? All of the data from this game will be deleted.")) {
-      fetch(`/api/v1/notifications/reset`)
+    if (window.confirm("Are you sure you want to start a new game? All of the entries from this game will be deleted.")) {
+      fetch(`/api/v1/games/${url}/notifications/reset`)
       .then(response => {
         if (response.ok) {
           return response;
@@ -64,16 +67,16 @@ export const Scoreboard = (props) => {
       })
       .then(response => response.json())
       .then(entries => {
-        setRedirectPath("/")
+        setRedirectPath(`/form`)
       })
       .catch(error => console.error(`Error in fetch: ${error.message}`))
     }
   }
-  
+
   const myTurn = (event) => {
     event.preventDefault()
     if (currentRound === 0) {
-      fetch('/api/v1/rounds/1', {
+      fetch(`/api/v1/games/${url}/rounds/1`, {
         credentials: "same-origin",
         method: 'PATCH',
         headers: {
@@ -105,11 +108,23 @@ export const Scoreboard = (props) => {
   }
 
   if (redirectPath) {
-    return <Redirect to={redirectPath} />
+    return <Redirect to={`/game/${url}${redirectPath}`} />
+  }
+
+  if (totalEntries === 0) {
+    return <Redirect to={`/game/${url}/form`} />
+  }
+
+  if (currentRound === 4) {
+    if (redScoreTotal > blueScoreTotal && currentTeam !== "Red") {
+      setCurrentTeam("Red")
+    } else if (redScoreTotal < blueScoreTotal && currentTeam !== "Blue") {
+      setCurrentTeam("Blue")
+    }
   }
 
   return (
-    <div class={`scoreboard ${currentTeam}`}>
+    <div className={`scoreboard-${currentTeam}`}>
       {currentRound === 0 && (
         <span>
           <p>Prepare for Round 1</p>
@@ -151,7 +166,7 @@ export const Scoreboard = (props) => {
               <tr>
                 <th>
                   <form onSubmit={() => window.location.reload()}>
-                    <input type="submit" class="refresh-button" value="Refresh" />
+                    <input type="submit" className="refresh-button" value="Refresh" />
                   </form>
                 </th>
                 <th>Red</th>
@@ -186,12 +201,12 @@ export const Scoreboard = (props) => {
       <br />
       {currentRound !== 4 && (
         <form onSubmit={myTurn}>
-          <input type="submit" class="submit-button" value="My Turn" />
+          <input type="submit" className="submit-button" value="My Turn" />
         </form>
       )}
       <br />
       <form className="reset-button" onSubmit={resetGame}>
-        <input type="submit" class="submit-button" value="Reset and Start New Game" />
+        <input type="submit" className="submit-button" value="Reset and Start New Game" />
       </form>
     </div>
   )

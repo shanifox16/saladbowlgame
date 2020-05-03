@@ -1,40 +1,37 @@
 @font-face {
-	font-family: 'apercu-bold';
-	src: url('../images/apercu-bold.otf');
+	font-family: 'apercu';
+	src: url('../images/apercu.otf');
 }
 
 @font-face {
-	font-family: 'apercu-bold-bold';
-	src: url('../images/apercu-bold-bold.otf');
+	font-family: 'apercu-bold';
+	src: url('../images/apercu-bold.otf');
   font-weight: bold;
 }
 
 .app {
-  // background-color: #FCF2E6;
-  background-image: url('https://salad-bowl.s3.us-east-1.amazonaws.com/salad-bowl.jpg');
   background-repeat: no-repeat;
   background-size: cover;
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: #faf6ee;
   background-blend-mode: lighten;
-}
-
-.top-bar {
-  background-color: transparent;
-  padding-bottom: 0;
-  height: 65px;
-
-  .header-text {
-    font-family: 'apercu-bold', sans-serif;
-    color: black;
-  }
+  // overflow: hidden;
+  position: relative;
+  font-family: 'apercu', sans-serif;
+  color: #292412;
+  -webkit-font-smoothing: antialiased;
 }
 
 .submit-button {
-  margin: 20px;
-  padding: 10px;
-  border-radius: 5px;
-  border-color: #FF9E9D;
-  background-color: #FF9E9D;
+  background-color: #292412;
+  color: #faf6ee;
+  border: none;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Apercu";
+  border-radius: 24px;
+  min-width: 176px;
+  padding: 12px;
+  margin: 22px;
   cursor: pointer;
 }
 
@@ -47,19 +44,139 @@
 
 .home-screen {
   text-align: center;
+  background-color: #faf6ee;
+  // position: fixed;
+  // top: 50%;
+  // left: 50%;
+  // margin-top: -320px;
+  // margin-left: -280px;
+  // width: 560px;
+  // height: 640px;
 
   .rules-list {
-    border-style: solid;
-    border-color: black;
     text-align: left;
+    padding: 5px 49px 0;
     width: 40%;
     margin: 0 30% 0 30%;
-    padding: 25px 25px 10px 25px;
+  }
+
+  h1 {
+    font-size: 35px;
+    margin: 35px 10px 5px;
+  }
+  .rule {
+    font-size: 16px;
+    margin: 15px 0px;
+    line-height: 25px;
+  }
+
+  .game-input {
+    margin-bottom: 5px;
+  }
+
+  .home-button {
+    margin: 10px;
+  }
+
+  .cancel-button {
+    cursor: pointer;
   }
 }
 
-.scoreboard {
+@media (max-width: 1000px) {
+  .rules-list {
+    text-align: center !important;
+    padding: 0 !important;
+    width: 85% !important;
+    margin: 0 auto !important;
+  }
+}
+
+.error-list {
+  background-color: #f7e4e1;
+
+  li {
+    list-style-type: none;
+  }
+}
+
+.background {
+  position: absolute;
+}
+
+.salad-cell{
+  width: 80px;
+  height: 80px;
+  position: absolute;
+}
+.top-left {
+  background-image: url('top-left.svg');
+  background-position: 0 0;
+  left: 0px;
+  top: 0px;
+}
+.top-middle {
+  background-image: url('top-middle.svg');
+  background-position: 0 0;
+  left: 80px;
+  top: 0px;
+}
+.top-right {
+  background-image: url('top-right.svg');
+  background-position: 0 0;
+  left: 160px;
+  top: 0px;
+}
+.middle-left {
+  background-image: url('middle-left.svg');
+  background-position: 0 0;
+  left: 0px;
+  top: 80px;
+}
+.middle-middle {
+  background-image: url('middle-middle.svg');
+  background-position: 0 0;
+  left: 80px;
+  top: 80px;
+}
+.middle-right {
+  background-image: url('middle-right.svg');
+  background-position: 0 0;
+  left: 160px;
+  top: 80px;
+}
+.bottom-left {
+  background-image: url('bottom-left.svg');
+  background-position: 0 0;
+  left: 0px;
+  top: 160px;
+}
+.bottom-middle {
+  background-image: url('bottom-middle.svg');
+  background-position: 0 0;
+  left: 80px;
+  top: 160px;
+}
+.bottom-right {
+  background-image: url('bottom-right.svg');
+  background-position: 0 0;
+  left: 160px;
+  top: 160px;
+}
+
+.scoreboard-Red {
+  padding-top: 50px;
   text-align: center;
+  background-color: #F56A7D90;
+  opacity: .8;
+  height: 100vh;
+}
+
+.scoreboard-Blue {
+  padding-top: 50px;
+  text-align: center;
+  background-color: #6A99F590;
+  height: 100vh;
 }
 
 table {
@@ -71,17 +188,6 @@ table {
   border-color: black;
   margin: 0 30% 0 30%;
   width: 40%;
-}
-
-.Red {
-  background-color: #fccfcf30;
-  opacity: .8;
-  height: 100vh;
-}
-
-.Blue {
-  background-color: #b6dcfa30;
-  height: 100vh;
 }
 
 .reset-button {
@@ -109,6 +215,7 @@ table {
 .my-turn-container {
   width: 100%;
   max-width: 1920px;
+  // text-align: center;
 }
 
 .countdown-timer {

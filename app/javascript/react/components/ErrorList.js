@@ -2,22 +2,18 @@ import React from "react"
 import _ from "lodash"
 
 const ErrorList = props => {
-  const errantFields = Object.keys(props.errors)
-
-  if (errantFields.length > 0) {
+  if (props.errors.length > 0) {
     let index = 0
-    const listItems = errantFields.map(field => {
-      index++
-
+    const listItems = props.errors.map(error => {
       return (
-        <li key={index}>
-          {_.startCase(field)} {props.errors[field]}
+        <li key={error}>
+          {error}
         </li>
       )
     })
 
     return (
-      <div className="callout alert">
+      <div className="error-list">
         <ul>{listItems}</ul>
       </div>
     )

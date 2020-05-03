@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { Redirect } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import _ from "lodash"
 import ErrorList from "./ErrorList"
 
 export const Form = (props) => {
-  const [errors, setErrors] = useState({})
+  const [errors, setErrors] = useState([])
   const [redirect, setRedirect] = useState(false)
+  const [gameUrl, setGameUrl] = useState("")
   const [entryFields, setEntryFields] = useState({
     entryOne: '',
     entryTwo: '',
@@ -22,15 +23,13 @@ export const Form = (props) => {
   }
 
   const validForSubmission = () => {
-    let submitErrors = {}
+    let submitErrors = []
 
     const requiredFields = ["entryOne", "entryTwo", "entryThree", "entryFour", "entryFive"]
 
     requiredFields.forEach(field => {
       if(entryFields[field].trim() === "") {
-        submitErrors = {
-          "You": "must submit 5 names to play salad bowl 🥗"
-        }
+        submitErrors = ["You must submit 5 names to play salad bowl 🥗"]
       }
     })
 
@@ -40,8 +39,9 @@ export const Form = (props) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    const url = props.match.params.url
     if (validForSubmission()) {
-      fetch('/api/v1/entries/', {
+      fetch(`/api/v1/games/${url}/entries/`, {
         credentials: "same-origin",
         method: 'POST',
         body: JSON.stringify(entryFields),
@@ -62,6 +62,7 @@ export const Form = (props) => {
       .then(response => response.json())
       .then(body => {
         if (!!body[0].id) {
+          setGameUrl(url)
           setRedirect(true)
         } else {
           setErrors(body.errors)
@@ -81,7 +82,7 @@ export const Form = (props) => {
   }
 
   if (redirect) {
-    return <Redirect to="/scoreboard" />
+    return <Redirect to={`/game/${gameUrl}/scoreboard`} />
   }
 
   return (
@@ -91,7 +92,7 @@ export const Form = (props) => {
         <h5>Players will need to guess these names later on, so they shouldn't be too obscure.</h5>
         <ErrorList
           errors={errors}
-          />
+        />
         <label htmlFor="entryOne">Name #1:
           <input
             className="entry"
@@ -143,6 +144,7 @@ export const Form = (props) => {
             />
         </label>
         <input className="submit-button" id="submit" type="submit" value="Submit" />
+        <Link to="/">Wrong Game? Click here.</Link>
       </form>
     </span>
   )

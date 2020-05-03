@@ -1,12 +1,22 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, Redirect } from 'react-router-dom'
+import _ from "lodash"
+import ErrorList from "./ErrorList"
+import "babel-polyfill"
 
 export const Home = (props) => {
   const [redirectPath, setRedirectPath] = useState(null)
+  const [gameAction, setGameAction] = useState("none")
+  const [allGames, setAllGames] = useState([])
+  const [gameUrl, setGameUrl] = useState("")
+  const [gameName, setGameName] = useState({
+    name: ""
+  })
+  const [redirect, setRedirect] = useState(false)
+  const [errors, setErrors] = useState([])
 
-  const letsPlay = (event) => {
-    event.preventDefault()
-    fetch(`/api/v1/rounds`)
+  useEffect(() => {
+    fetch(`/api/v1/games`)
     .then(response => {
       if (response.ok) {
         return response;
@@ -17,31 +27,119 @@ export const Home = (props) => {
       }
     })
     .then(response => response.json())
-    .then(round => {
-      // If round is 4, clear all entries, set round to 0, and redirect to form
-      if (round === 4) {
-        fetch(`/api/v1/notifications/reset`)
-        .then(response => {
-          if (response.ok) {
-            return response;
-          } else {
-            let errorMessage = `${response.status} (${response.statusText})`,
+    .then(games => {
+      setAllGames(games)
+    })
+  }, [])
+
+  const convertNameToPath = (name) => {
+    return name.replace(/[^0-9a-zA-Z ]/g, '').replace(/ /g, "-").toLowerCase()
+  }
+
+  const handleInputChange = (event) => {
+    if (errors !== []) {
+      setErrors([])
+    }
+    setGameName({"name": event.currentTarget.value})
+  }
+
+  const validForSubmission = () => {
+    if (gameName.name === "") {
+      return setErrors(["Game Name cannot be blank."])
+    }
+    const url = convertNameToPath(gameName.name)
+    return !allGames.find(game => game.url === url)
+  }
+
+  const createGame = (event) => {
+    event.preventDefault()
+    if (validForSubmission()) {
+      fetch('/api/v1/games/', {
+        credentials: "same-origin",
+        method: 'POST',
+        body: JSON.stringify(gameName),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          return response;
+        } else {
+          let errorMessage = `${response.status} (${response.statusText})`,
+           error = new Error(errorMessage);
+          throw(error);
+        }
+      })
+      .then(response => response.json())
+      .then(body => {
+        if (!!body.id) {
+          setGameUrl(body.url)
+          setRedirect(true)
+        } else {
+          setErrors(body.errors)
+          setEntryFields(body.fields)
+        }
+      })
+      .catch(error => console.error(`Error in fetch: ${error.message}`))
+
+      setGameName({name: ""})
+    } else {
+      setErrors(["Game Name already taken. Please choose something else."])
+    }
+  }
+
+  if (redirect) {
+    return <Redirect to={`/game/${gameUrl}/form`} />
+  }
+
+  const joinGame = (event) => {
+    event.preventDefault()
+    if (gameName.name === "") {
+      return setErrors(["Game Name cannot be blank."])
+    }
+    const joinUrl = convertNameToPath(gameName.name)
+    fetch(`/api/v1/games/${joinUrl}`)
+    .then(response => {
+      if (response.ok) {
+        return response;
+      } else {
+        let errorMessage = `${response.status} (${response.statusText})`,
+          error = new Error(errorMessage)
+        throw(error);
+      }
+    })
+    .then(response => response.json())
+    .then(game => {
+      if (game.id) {
+        setGameUrl(game.url)
+        if (game.round === 4) {
+          fetch(`/api/v1/games/${game.url}/notifications/reset`)
+          .then(response => {
+            if (response.ok) {
+              return response;
+            } else {
+              let errorMessage = `${response.status} (${response.statusText})`,
               error = new Error(errorMessage)
-            throw(error);
-          }
-        })
-        .then(response => response.json())
-        .then(entries => {
+              throw(error);
+            }
+          })
+          .then(response => response.json())
+          .then(entries => {
+            setRedirectPath("form")
+          })
+          .catch(error => console.error(`Error in fetch: ${error.message}`))
+        }
+        if (game.round >= 1 && game.round <= 3) {
+          alert(`${game.name} is already in progress. Here's the scoreboard!`)
+          setRedirectPath("scoreboard")
+        }
+        if (game.round === 0) {
           setRedirectPath("form")
-        })
-        .catch(error => console.error(`Error in fetch: ${error.message}`))
-      }
-      if (round >= 1 && round <= 3) {
-        alert("Game is already in progress. Here's the scoreboard!")
-        setRedirectPath("scoreboard")
-      }
-      if (round === 0) {
-        setRedirectPath("form")
+        }
+      } else {
+        setErrors(game.errors)
       }
 
     })
@@ -49,24 +147,83 @@ export const Home = (props) => {
   }
 
   if (redirectPath) {
-    return <Redirect to={`/${redirectPath}`} />
+    return <Redirect to={`/game/${gameUrl}/${redirectPath}`} />
   }
 
   return (
-    <div className="home-screen">
-      <p>Welcome to Salad Bowl!</p>
-      <div className="rules-list">
-        <p style={{textAlign: "center"}}>How to play:</p>
-        <p>First, each player will submit 5 names of people or fictional characters. Then, players will separate into two equal teams to compete in three rounds.&nbsp;</p>
-        <p>Round 1: When the first player clicks "My Turn," they will see one name at a time. They will need to use words (no hand gestures) to get their teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
-        <p>Round 2: This round is similar, except the player giving clues can only say one word for each name. They can repeat the word as many times as desired.</p>
-        <p>Round 3: Charades! (no talking allowed)</p>
+    <span>
+      <div id="background" className="background">
       </div>
+      <div className="home-screen">
+        <h1>Salad Bowl!</h1>
 
-      <form onSubmit={letsPlay}>
-        <input type="submit" class="submit-button" value="Let's Play!" />
-      </form>
-    </div>
+        <div className="rules-list">
+          <p className="rule">Before the game begins, each player submits 5 names of people or fictional characters. Then, players separate into two equal teams to compete in three rounds.&nbsp;</p>
+          <p className="rule">Round 1: When the first player clicks "My Turn," they will see one name at a time. They will need to use words (no hand gestures) to get their teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
+          <p className="rule">Round 2: This round is similar, except the player giving clues can only say one word for each name. They can repeat the word as many times as desired.</p>
+          <p className="rule">Round 3: Charades! (no talking allowed)</p>
+        </div>
+
+        {gameAction === "none" && (
+          <span>
+            <button onClick={() => setGameAction("join")} type="button" className="submit-button">Join Game</button>
+            <button onClick={() => setGameAction("create")} type="button" className="submit-button">Create New Game</button>
+          </span>
+        )}
+        <ErrorList
+          errors={errors}
+          />
+        {gameAction === "join" && (
+          <form onSubmit={joinGame} className="entry-form">
+            <label>Enter your game name:
+              <input
+                type="text"
+                value={gameName.name}
+                onChange={handleInputChange}
+                className="game-input"
+                />
+            </label>
+            <input type="submit" className="submit-button home-button" value="Join Game" />
+            <button
+              onClick={() => {
+                setGameAction("none")
+                if (errors !== []) {
+                  setErrors([])
+                }
+              }}
+              className="cancel-button"
+              type="button">
+              Cancel
+            </button>
+          </form>
+        )}
+        {gameAction === "create" && (
+          <form onSubmit={createGame} className="entry-form">
+            <label>Create a name for your game:
+              <input
+                type="text"
+                maxLength="50"
+                value={gameName.name}
+                onChange={handleInputChange}
+                className="game-input"
+                />
+            </label>
+            <input type="submit" className="submit-button home-button" value="Create New Game" />
+            <button
+              onClick={() => {
+                setGameAction("none")
+                if (errors !== []) {
+                  setErrors([])
+                }
+              }}
+              className="cancel-button"
+              type="button">
+              Cancel
+            </button>
+          </form>
+        )}
+      </div>
+    </span>
   )
 }
 

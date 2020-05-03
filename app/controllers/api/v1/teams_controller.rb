@@ -1,14 +1,14 @@
 class Api::V1::TeamsController < ApiController
   def update
-    team = Team.first
-    if team.name == "Blue"
-      team.name = "Red"
+    current_game = Game.find_by(url: params["game_id"])
+    if current_game.current_team == "Blue"
+      current_game.current_team = "Red"
     else
-      team.name = "Blue"
+      current_game.current_team = "Blue"
     end
 
-    if team.save
-      render json: team
+    if current_game.save
+      render json: current_game
     else
       render json: {error: "Could not change the team - oops"}
     end

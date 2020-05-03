@@ -9,10 +9,6 @@
 </head>
 <body class="app">
 
-  <nav class="top-bar">
-    <h1><a class="header-text" href="/">Salad Bowl</a></h1>
-  </nav>
-
   <%- flash.each do |key, value| -%>
     <div class="flash flash-<%= key %>">
       <%= value %>
@@ -28,6 +24,7 @@
       window.railsEnv = '<%= Rails.env %>'
     <%- end -%>
   <%- end -%>
+  <%= javascript_include_tag 'application' %>
   <%= javascript_pack_tag 'application' %>
 
   <%= yield :extra_footer %>
