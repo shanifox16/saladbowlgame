@@ -14,6 +14,8 @@ export const Scoreboard = (props) => {
   const [entriesLeftInRound, setEntriesLeftInRound] = useState(0)
   const [totalEntries, setTotalEntries] = useState(null)
   const [currentTeam, setCurrentTeam] = useState(null)
+  const [blueTeam, setBlueTeam] = useState([])
+  const [redTeam, setRedTeam] = useState([])
   const [currentRound, setCurrentRound] = useState(1)
   const [redirectPath, setRedirectPath] = useState(null)
   const url = props.match.params.url
@@ -43,6 +45,8 @@ export const Scoreboard = (props) => {
       setTotalEntries(data.total_entries.length)
       setCurrentTeam(data.current_team)
       setCurrentRound(data.current_round)
+      setBlueTeam(data.blue_team_players)
+      setRedTeam(data.red_team_players)
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
 
@@ -123,11 +127,41 @@ export const Scoreboard = (props) => {
     }
   }
 
+  const blueTeamPlayerList = blueTeam.map(player => {
+    return (
+      <div>{player.name}</div>
+    )
+  })
+
+  const redTeamPlayerList = redTeam.map(player => {
+    return (
+      <div>{player.name}</div>
+    )
+  })
+
+  const playerTable = (
+    <table className="player-table">
+      <thead>
+        <tr>
+          <th className="th-red">Red Team</th>
+          <th className="th-blue">Blue Team</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{redTeamPlayerList}</td>
+          <td>{blueTeamPlayerList}</td>
+        </tr>
+      </tbody>
+    </table>
+  )
+
   return (
     <div className={`scoreboard-${currentTeam}`}>
       {currentRound === 0 && (
         <span>
           <p>Prepare for Round 1</p>
+          {playerTable}
           <p>The <strong>{currentTeam}</strong> team will go first</p>
           <p>Once all players have finished submitting 5 names, the first player should click &quot;My Turn&quot;</p>
           <p>Use words (no hand gestures) to get your teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
@@ -161,14 +195,12 @@ export const Scoreboard = (props) => {
         </span>
       )}
       {currentRound !== 0 && (
-          <table>
+        <span>
+          {playerTable}
+          <table className="score-table">
             <thead>
               <tr>
-                <th>
-                  <form onSubmit={() => window.location.reload()}>
-                    <input type="submit" className="refresh-button" value="Refresh" />
-                  </form>
-                </th>
+                <th></th>
                 <th>Red</th>
                 <th>Blue</th>
               </tr>
@@ -196,6 +228,7 @@ export const Scoreboard = (props) => {
               </tr>
             </tbody>
           </table>
+        </span>
       )}
 
       <br />
@@ -205,8 +238,8 @@ export const Scoreboard = (props) => {
         </form>
       )}
       <br />
-      <form className="reset-button" onSubmit={resetGame}>
-        <input type="submit" className="submit-button" value="Reset and Start New Game" />
+      <form className="reset-button-container" onSubmit={resetGame}>
+        <input type="submit" className="submit-button reset-button" value="Reset and Start New Game" />
       </form>
     </div>
   )

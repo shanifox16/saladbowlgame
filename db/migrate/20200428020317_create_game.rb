@@ -6,6 +6,8 @@ class CreateGame < ActiveRecord::Migration[5.2]
       t.integer :round, null: false, default: 0
       t.string :current_team, null: false
       t.boolean :is_active, default: true
+
+      t.timestamps
     end
   end
 end

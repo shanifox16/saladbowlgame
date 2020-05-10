@@ -35,6 +35,15 @@
   cursor: pointer;
 }
 
+.reset-button-container {
+	text-align: right;
+  margin: 0 15px 0 0;
+}
+
+.reset-button {
+	font-size: .8em;
+}
+
 .refresh-button {
   border-radius: 5px;
   border-color: #e0dcdc;
@@ -169,17 +178,44 @@
   text-align: center;
   background-color: #F56A7D90;
   opacity: .8;
-  height: 100vh;
 }
 
 .scoreboard-Blue {
   padding-top: 50px;
   text-align: center;
   background-color: #6A99F590;
-  height: 100vh;
 }
 
-table {
+.player-table {
+	th {
+    text-align: center;
+  }
+
+	.th-red {
+		color: red;
+	}
+
+	.th-blue {
+		color: blue;
+	}
+
+	thead {
+		background: transparent;
+		border: transparent;
+	}
+
+	tbody {
+		background: transparent;
+		border: transparent;
+	}
+
+  text-align: center;
+  margin: 0 35% 0 35%;
+  width: 30%;
+	margin-bottom: 15px;
+}
+
+.score-table {
   th {
     text-align: center;
   }
@@ -188,11 +224,6 @@ table {
   border-color: black;
   margin: 0 30% 0 30%;
   width: 40%;
-}
-
-.reset-button {
-  text-align: right;
-  margin: 0 15px 0 0;
 }
 
 .entry-form {

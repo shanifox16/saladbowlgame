@@ -36,6 +36,12 @@ class Api::V1::EntriesController < ApiController
     entryThree.game = current_game
     entryFour.game = current_game
     entryFive.game = current_game
+    player = Player.new(
+      name: params["username"],
+      team: params["team"],
+      game: current_game
+    )
+    player.save
 
     if entryOne.save
       entries.push(entryOne)
@@ -64,6 +70,7 @@ class Api::V1::EntriesController < ApiController
           entryThree: entryThree,
           entryFour: entryFour,
           entryFive: entryFive,
+          player: player
         }
       }
     end

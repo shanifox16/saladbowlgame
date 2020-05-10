@@ -1,6 +1,9 @@
 class Api::V1::NotificationsController < ApiController
   def index
     current_game = Game.find_by(url: params["game_id"])
+    current_players = current_game.players
+    blue_team_players = current_players.where(team: "Blue")
+    red_team_players = current_players.where(team: "Red")
     current_entries = current_game.entries
     red_score_round_one = current_entries.where(round_one_winner: "Red")
     red_score_round_two = current_entries.where(round_two_winner: "Red")
@@ -32,7 +35,9 @@ class Api::V1::NotificationsController < ApiController
       entries_left_in_round: entries_left_in_round,
       total_entries: current_entries,
       current_team: current_game.current_team,
-      current_round: current_round
+      current_round: current_round,
+      blue_team_players: blue_team_players,
+      red_team_players: red_team_players
     }
   end
 
@@ -40,8 +45,10 @@ class Api::V1::NotificationsController < ApiController
     if params[:id] == "reset"
       current_game = Game.find_by(url: params["game_id"])
       all_entries = current_game.entries
+      all_players = current_game.players
 
       all_entries.delete_all
+      all_players.delete_all
       current_game.round = 0
       current_game.save
 

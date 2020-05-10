@@ -8,6 +8,8 @@ export const Form = (props) => {
   const [redirect, setRedirect] = useState(false)
   const [gameUrl, setGameUrl] = useState("")
   const [entryFields, setEntryFields] = useState({
+    username: '',
+    team: '',
     entryOne: '',
     entryTwo: '',
     entryThree: '',
@@ -32,6 +34,16 @@ export const Form = (props) => {
         submitErrors = ["You must submit 5 names to play salad bowl 🥗"]
       }
     })
+
+    const requiredUserInfo = ["username", "team"]
+
+    if(entryFields["team"].trim() === "") {
+      submitErrors.unshift("Please select a team")
+    }
+    
+    if(entryFields["username"].trim() === "") {
+      submitErrors.unshift("Please enter your display name")
+    }
 
     setErrors(submitErrors)
     return _.isEmpty(submitErrors)
@@ -72,6 +84,8 @@ export const Form = (props) => {
       .catch(error => console.error(`Error in fetch: ${error.message}`))
 
       setEntryFields({
+        username: '',
+        team: '',
         entryOne: '',
         entryTwo: '',
         entryThree: '',
@@ -88,11 +102,33 @@ export const Form = (props) => {
   return (
     <span className="form-page">
       <form onSubmit={handleSubmit} className="entry-form">
-        <h5>To prepare for your game, please submit 5 names of people or fictional characters.</h5>
-        <h5>Players will need to guess these names later on, so they shouldn't be too obscure.</h5>
         <ErrorList
           errors={errors}
-        />
+          />
+        <label htmlFor="username">How would you like your name to display to other players?
+          <input
+            className="entry"
+            type="text"
+            id="username"
+            maxlength="40"
+            value={entryFields.username}
+            onChange={handleInputChange}
+            />
+        </label>
+        <select
+          className="entry"
+          id="team"
+          name="team"
+          value={entryFields.team}
+          onChange={handleInputChange}
+          >
+          <option value="">What team are you on?</option>
+          <option value="Red">Red</option>
+          <option value="Blue">Blue</option>
+        </select>
+
+        <h5>Now, to prepare for your game, please submit 5 names of people or fictional characters.</h5>
+        <h5>Players will need to guess these names later on, so they shouldn't be too obscure.</h5>
         <label htmlFor="entryOne">Name #1:
           <input
             className="entry"

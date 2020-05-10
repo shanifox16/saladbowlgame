@@ -5,4 +5,5 @@ class Game < ApplicationRecord
   validates :current_team, presence: true
 
   has_many :entries
+  has_many :players
 end
