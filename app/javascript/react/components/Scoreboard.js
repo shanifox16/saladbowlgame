@@ -19,6 +19,8 @@ export const Scoreboard = (props) => {
   const [currentRound, setCurrentRound] = useState(1)
   const [redirectPath, setRedirectPath] = useState(null)
   const url = props.match.params.url
+  const nameTerm = "name"
+  const nameTerms = "names"
 
   useEffect(() => {
     fetch(`/api/v1/games/${url}/notifications`)
@@ -163,8 +165,8 @@ export const Scoreboard = (props) => {
           <p>Prepare for Round 1</p>
           {playerTable}
           <p>The <strong>{currentTeam}</strong> team will go first</p>
-          <p>Once all players have finished submitting 5 names, the first player should click &quot;My Turn&quot;</p>
-          <p>Use words (no hand gestures) to get your teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
+          <p>Once all players have finished submitting 5 {nameTerms}, the first player should click &quot;My Turn&quot;</p>
+          <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
         </span>
       )}
       {currentRound === 4 && (
@@ -182,10 +184,10 @@ export const Scoreboard = (props) => {
           <p>Scoreboard:</p>
           <p>Current Round: <strong>{currentRound}</strong></p>
           {currentRound === 1 && (
-            <p>Use words (no hand gestures) to get your teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
+            <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying the it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
           )}
           {currentRound === 2 && (
-            <p>You can can only say one word for each name. You can repeat the word as many times as desired, or even sing it.</p>
+            <p>You can can only say one word for each {nameTerm}. You can repeat the word as many times as desired, or even sing it.</p>
           )}
           {currentRound === 3 && (
             <p>Charades! (no talking allowed)</p>

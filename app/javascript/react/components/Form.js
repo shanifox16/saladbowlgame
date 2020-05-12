@@ -17,6 +17,10 @@ export const Form = (props) => {
     entryFive: ''
   })
 
+  const nameTerm = "name"
+  const nameTerms = "names"
+  const nameDescription = "names of people or fictional characters"
+
   const handleInputChange = event => {
     setEntryFields({
       ...entryFields,
@@ -40,7 +44,7 @@ export const Form = (props) => {
     if(entryFields["team"].trim() === "") {
       submitErrors.unshift("Please select a team")
     }
-    
+
     if(entryFields["username"].trim() === "") {
       submitErrors.unshift("Please enter your display name")
     }
@@ -93,6 +97,7 @@ export const Form = (props) => {
         entryFive: ''
       })
     }
+    window.scrollTo(0, 0)
   }
 
   if (redirect) {
@@ -127,9 +132,9 @@ export const Form = (props) => {
           <option value="Blue">Blue</option>
         </select>
 
-        <h5>Now, to prepare for your game, please submit 5 names of people or fictional characters.</h5>
-        <h5>Players will need to guess these names later on, so they shouldn't be too obscure.</h5>
-        <label htmlFor="entryOne">Name #1:
+        <h5>Now, to prepare for your game, please submit 5 {nameDescription}.</h5>
+        <h5>Players will need to guess these {nameTerms} later on, so they shouldn't be too obscure.</h5>
+        <label htmlFor="entryOne">{_.capitalize(nameTerm)} #1:
           <input
             className="entry"
             type="text"
@@ -139,7 +144,7 @@ export const Form = (props) => {
             onChange={handleInputChange}
             />
         </label>
-        <label htmlFor="entryTwo">Name #2:
+        <label htmlFor="entryTwo">{_.capitalize(nameTerm)} #2:
           <input
             className="entry"
             type="text"
@@ -149,7 +154,7 @@ export const Form = (props) => {
             onChange={handleInputChange}
             />
         </label>
-        <label htmlFor="entryThree">Name #3:
+        <label htmlFor="entryThree">{_.capitalize(nameTerm)} #3:
           <input
             className="entry"
             type="text"
@@ -159,7 +164,7 @@ export const Form = (props) => {
             onChange={handleInputChange}
             />
         </label>
-        <label htmlFor="entryFour">Name #4:
+        <label htmlFor="entryFour">{_.capitalize(nameTerm)} #4:
           <input
             className="entry"
             type="text"
@@ -169,7 +174,7 @@ export const Form = (props) => {
             onChange={handleInputChange}
             />
         </label>
-        <label htmlFor="entryFive">Name #5:
+        <label htmlFor="entryFive">{_.capitalize(nameTerm)} #5:
           <input
             className="entry"
             type="text"

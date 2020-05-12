@@ -14,6 +14,9 @@ export const Home = (props) => {
   })
   const [redirect, setRedirect] = useState(false)
   const [errors, setErrors] = useState([])
+  const nameTerm = "name"
+  const nameTerms = "names"
+  const nameDescription = "names of people or fictional characters"
 
   useEffect(() => {
     fetch(`/api/v1/games`)
@@ -158,9 +161,9 @@ export const Home = (props) => {
         <h1>Salad Bowl!</h1>
 
         <div className="rules-list">
-          <p className="rule">Before the game begins, each player submits 5 names of people or fictional characters. Then, players separate into two equal teams to compete in three rounds.&nbsp;</p>
-          <p className="rule">Round 1: When the first player clicks "My Turn," they will see one name at a time. They will need to use words (no hand gestures) to get their teammates to guess the name, without saying the name itself. Teams will alternate until all names have been guessed.</p>
-          <p className="rule">Round 2: This round is similar, except the player giving clues can only say one word for each name. They can repeat the word as many times as desired.</p>
+          <p className="rule">Before the game begins, players form two equal teams: Red and Blue. Then, each player submits 5 {nameDescription}. Teams will compete in 3 rounds. &nbsp;</p>
+          <p className="rule">Round 1: When the first player clicks "My Turn," they will see one {nameTerm} at a time. They will need to use words (no hand gestures) to get their teammates to guess the {nameTerm}, without saying the {nameTerm} itself. Teams will alternate until all {nameTerms} have been guessed.</p>
+          <p className="rule">Round 2: This round is similar, except the player giving clues can only say one word for each {nameTerm}. They can repeat the word as many times as desired.</p>
           <p className="rule">Round 3: Charades! (no talking allowed)</p>
         </div>
 
