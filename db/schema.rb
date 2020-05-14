@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 2020_05_05_024515) do
     t.integer "round", default: 0, null: false
     t.string "current_team", null: false
     t.boolean "is_active", default: true
+    t.integer "seconds_remaining", default: 59000, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

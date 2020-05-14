@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import _ from "lodash"
 import ErrorList from "./ErrorList"
 import "babel-polyfill"
@@ -94,7 +94,7 @@ export const Home = (props) => {
   }
 
   if (redirect) {
-    return <Redirect to={`/game/${gameUrl}/form`} />
+    window.location.href = `/game/${gameUrl}/form`
   }
 
   const joinGame = (event) => {
@@ -150,7 +150,7 @@ export const Home = (props) => {
   }
 
   if (redirectPath) {
-    return <Redirect to={`/game/${gameUrl}/${redirectPath}`} />
+    window.location.href = `/game/${gameUrl}/${redirectPath}`
   }
 
   return (
@@ -226,6 +226,9 @@ export const Home = (props) => {
           </form>
         )}
       </div>
+      {/* <footer>
+        <a href="/privacypolicy" target="_blank">Privacy Policy</a>
+      </footer> */}
     </span>
   )
 }

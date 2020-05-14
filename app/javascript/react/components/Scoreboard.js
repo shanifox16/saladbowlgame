@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export const Scoreboard = (props) => {
   const [timer, setTimer] = useState(0)
+  const [secondsRemaining, setSecondsRemaining] = useState(60000)
   const [redScoreRoundOne, setRedScoreRoundOne] = useState(0)
   const [redScoreRoundTwo, setRedScoreRoundTwo] = useState(0)
   const [redScoreRoundThree, setRedScoreRoundThree] = useState(0)
@@ -35,6 +36,7 @@ export const Scoreboard = (props) => {
     })
     .then(response => response.json())
     .then(data => {
+      setSecondsRemaining(data.seconds_remaining)
       setRedScoreRoundOne(data.red_score_round_one.length)
       setRedScoreRoundTwo(data.red_score_round_two.length)
       setRedScoreRoundThree(data.red_score_round_three.length)
@@ -55,6 +57,7 @@ export const Scoreboard = (props) => {
     const timeout = setTimeout(() => {
       setTimer(timer + 1);
     }, 3000)
+    // }, 500)
     return () => clearTimeout(timeout)
   }, [timer])
 
@@ -114,11 +117,11 @@ export const Scoreboard = (props) => {
   }
 
   if (redirectPath) {
-    return <Redirect to={`/game/${url}${redirectPath}`} />
+    window.location.href = `/game/${url}${redirectPath}`
   }
 
   if (totalEntries === 0) {
-    return <Redirect to={`/game/${url}/form`} />
+    window.location.href = `/game/${url}/form`
   }
 
   if (currentRound === 4) {
@@ -158,91 +161,125 @@ export const Scoreboard = (props) => {
     </table>
   )
 
-  return (
-    <div className={`scoreboard-${currentTeam}`}>
-      {currentRound === 0 && (
-        <span>
-          <p>Prepare for Round 1</p>
-          {playerTable}
-          <p>The <strong>{currentTeam}</strong> team will go first</p>
-          <p>Once all players have finished submitting 5 {nameTerms}, the first player should click &quot;My Turn&quot;</p>
-          <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
-        </span>
-      )}
-      {currentRound === 4 && (
-        <span>
-          <p><strong>GAME OVER</strong></p>
-          {redScoreTotal === blueScoreTotal ? (
-            <p>No way! It's a tie!</p>
-          ): (
-            <p>{redScoreTotal > blueScoreTotal ? "Red" : "Blue"} team wins!</p>
-          )}
-        </span>
-      )}
-      {currentRound !== 0 && currentRound !== 4 && (
-        <span>
-          <p>Scoreboard:</p>
-          <p>Current Round: <strong>{currentRound}</strong></p>
-          {currentRound === 1 && (
-            <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying the it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
-          )}
-          {currentRound === 2 && (
-            <p>You can can only say one word for each {nameTerm}. You can repeat the word as many times as desired, or even sing it.</p>
-          )}
-          {currentRound === 3 && (
-            <p>Charades! (no talking allowed)</p>
-          )}
-          <p>It is <strong>{currentTeam}</strong>&apos;s turn</p>
-          <p>Remaining Names: <strong>{entriesLeftInRound}</strong></p>
-        </span>
-      )}
-      {currentRound !== 0 && (
-        <span>
-          {playerTable}
-          <table className="score-table">
-            <thead>
-              <tr>
-                <th></th>
-                <th>Red</th>
-                <th>Blue</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Round 1</td>
-                <td>{redScoreRoundOne}</td>
-                <td>{blueScoreRoundOne}</td>
-              </tr>
-              <tr>
-                <td>Round 2</td>
-                <td>{redScoreRoundTwo}</td>
-                <td>{blueScoreRoundTwo}</td>
-              </tr>
-              <tr>
-                <td>Round 3</td>
-                <td>{redScoreRoundThree}</td>
-                <td>{blueScoreRoundThree}</td>
-              </tr>
-              <tr>
-                <td>Total</td>
-                <td>{redScoreTotal}</td>
-                <td>{blueScoreTotal}</td>
-              </tr>
-            </tbody>
-          </table>
-        </span>
-      )}
+  const formatSecondsRemaining = () => {
+    let seconds = secondsRemaining/1000
+    if (seconds < 60 && seconds > 9) {
+      return `:${seconds}`
+    } else if (seconds <= 9 && seconds > 1) {
+      return `:0${seconds}`
+    } else if (seconds === 60) {
+      return "1:00"
+    } else if (seconds <= 1) {
+      return ":00"
+    } else {
+      return `1:${seconds-60}`
+    }
+  }
 
-      <br />
-      {currentRound !== 4 && (
-        <form onSubmit={myTurn}>
-          <input type="submit" className="submit-button" value="My Turn" />
+  const getCurrentTeamRound = () => {
+    if (currentTeam === "Red" && currentRound === 1) {
+      return "R1"
+    } else if (currentTeam === "Red" && currentRound === 2) {
+      return "R2"
+    } else if (currentTeam === "Red" && currentRound === 3) {
+      return "R3"
+    } else if (currentTeam === "Blue" && currentRound === 1) {
+      return "B1"
+    } else if (currentTeam === "Blue" && currentRound === 2) {
+      return "B2"
+    } else if (currentTeam === "Blue" && currentRound === 3) {
+      return "B3"
+    }
+  }
+
+  const roundRules = () => {
+    if (currentRound === 1) {
+      return `Use words (no hand gestures) to get your teammates to guess the ${nameTerm}, without saying it yourself. Teams will alternate until all ${nameTerms} have been guessed.`
+    } else if (currentRound === 2) {
+      return `You can only say one word for each ${nameTerm}. You can repeat the word as many times as desired (or even sing it)`
+    } else if (currentRound === 3) {
+      return "Charades! (no talking allowed)"
+    }
+  }
+
+  return (
+    <div>
+      <div>
+        <form className="reset-button-container" onSubmit={resetGame}>
+          <input type="submit" className="reset-button" value="Start New Game" />
         </form>
-      )}
-      <br />
-      <form className="reset-button-container" onSubmit={resetGame}>
-        <input type="submit" className="submit-button reset-button" value="Reset and Start New Game" />
-      </form>
+      </div>
+      <div className="scoreboard">
+        {currentRound === 0 && (
+          <span>
+            <p>Prepare for Round 1</p>
+            {playerTable}
+            <p>The <strong>{currentTeam}</strong> team will go first</p>
+            <p>Once all players have finished submitting 5 {nameTerms}, the first player should click &quot;My Turn&quot;</p>
+            <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
+          </span>
+        )}
+        {currentRound === 4 && (
+          <span>
+            <p><strong>GAME OVER</strong></p>
+            {redScoreTotal === blueScoreTotal ? (
+              <p>No way! It's a tie!</p>
+            ): (
+              <p>{redScoreTotal > blueScoreTotal ? "Red" : "Blue"} team wins!</p>
+            )}
+          </span>
+        )}
+        {currentRound !== 0 && currentRound !== 4 && (
+          <p title={roundRules()}>Round <strong>{currentRound}</strong> (hover for rules)</p>
+        )}
+        {currentRound !== 0 && (
+          <span>
+            <table className="score-table">
+              <thead>
+                <tr>
+                  {/* <th><span className="small-text">Time</span><br/>{formatSecondsRemaining()}</th> */}
+                  <th colspan="3"><span className="small-text">Names Left</span><br/>{entriesLeftInRound}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ROUND 1</td>
+                  <td className={getCurrentTeamRound() === "R1" ? "R1" : ""}><span className="small-text">Red</span><br/>{redScoreRoundOne}</td>
+                  <td className={getCurrentTeamRound() === "B1" ? "B1" : ""}><span className="small-text">Blue</span><br/>{blueScoreRoundOne}</td>
+                </tr>
+                <tr>
+                  <td>ROUND 2</td>
+                  <td className={getCurrentTeamRound() === "R2" ? "R2" : ""}>{redScoreRoundTwo}</td>
+                  <td className={getCurrentTeamRound() === "B2" ? "B2" : ""}>{blueScoreRoundTwo}</td>
+                </tr>
+                <tr>
+                  <td>ROUND 3</td>
+                  <td className={getCurrentTeamRound() === "R3" ? "R3" : ""}>{redScoreRoundThree}</td>
+                  <td className={getCurrentTeamRound() === "B3" ? "B3" : ""}>{blueScoreRoundThree}</td>
+                </tr>
+                <tr>
+                  <td>TOTAL</td>
+                  <td>{redScoreTotal}</td>
+                  <td>{blueScoreTotal}</td>
+                </tr>
+              </tbody>
+            </table>
+          </span>
+        )}
+
+        <br />
+        {currentRound !== 4 && (
+          <form onSubmit={myTurn}>
+            <input type="submit" className="submit-button" value="My Turn" />
+          </form>
+        )}
+        <br />
+        {currentRound !== 0 && (
+          <span>
+            {playerTable}
+          </span>
+        )}
+      </div>
     </div>
   )
 }

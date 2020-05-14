@@ -32,4 +32,14 @@ class Api::V1::GamesController < ApiController
       render json: {errors: ["Game not found. Please try again."]}
     end
   end
+
+  def update
+    current_game = Game.find_by(url: params[:id])
+    current_game.seconds_remaining = params["remainingTime"]
+    if current_game.save
+      render json: {success: "Updated seconds remaining"}
+    else
+      render json: {errors: "Could not update seconds remaining"}
+    end
+  end
 end

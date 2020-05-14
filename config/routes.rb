@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get '/game/:url/form', to: 'homes#index'
   get '/game/:url/scoreboard', to: 'homes#index'
   get '/game/:url/myturn', to: 'homes#index'
+  get '/privacypolicy', to: 'homes#index'
 
   namespace :api do
     namespace :v1 do

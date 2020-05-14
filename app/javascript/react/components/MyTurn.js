@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Redirect } from 'react-router-dom'
 import Countdown from 'react-countdown';
 
-let turnLength = 59000
+let turnLength = 60000
 let remainingTime = turnLength
 let time
 let correct = 0
@@ -50,6 +49,17 @@ export const MyTurn = (props) => {
     .then(round => {
       if (round === 1) {
         remainingTime = turnLength
+        // fetch(`/api/v1/games/${url}`, {
+        //   credentials: "same-origin",
+        //   method: 'PATCH',
+        //   body: JSON.stringify({"remainingTime": remainingTime}),
+        //   headers: {
+        //     Accept: "application/json",
+        //     "Content-Type": "application/json"
+        //   }
+        // })
+        // .then(response => response.json())
+        // .catch(error => console.error(`Error in fetch: ${error.message}`))
       }
 
     })
@@ -63,6 +73,17 @@ export const MyTurn = (props) => {
   const handleStart = event => {
     if (remainingTime <= 1000) {
       remainingTime = turnLength
+      // fetch(`/api/v1/games/${url}`, {
+      //   credentials: "same-origin",
+      //   method: 'PATCH',
+      //   body: JSON.stringify({"remainingTime": remainingTime}),
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json"
+      //   }
+      // })
+      // .then(response => response.json())
+      // .catch(error => console.error(`Error in fetch: ${error.message}`))
     }
     time = Date.now() + remainingTime
     event.preventDefault()
@@ -127,6 +148,17 @@ export const MyTurn = (props) => {
               if (!!body.id) {
                 if (body.round === 4) {
                   remainingTime = turnLength
+                  // fetch(`/api/v1/games/${url}`, {
+                  //   credentials: "same-origin",
+                  //   method: 'PATCH',
+                  //   body: JSON.stringify({"remainingTime": remainingTime}),
+                  //   headers: {
+                  //     Accept: "application/json",
+                  //     "Content-Type": "application/json"
+                  //   }
+                  // })
+                  // .then(response => response.json())
+                  // .catch(error => console.error(`Error in fetch: ${error.message}`))
                 }
                 correct = 0
                 setTimesUp(true)
@@ -164,11 +196,13 @@ export const MyTurn = (props) => {
     setTimeout(() => setIsButtonDisabled(false), 1000)
   }
 
-  const timeFormat = ({ seconds, completed }) => {
+  const timeFormat = ({ minutes, seconds, completed }) => {
     if (completed) {
       return <p className="countdown-timer">Time's Up!</p>
+    } else if (seconds < 10) {
+      return <p className="countdown-timer">0{minutes}:0{seconds}</p>
     } else {
-      return <p className="countdown-timer">:{seconds}</p>;
+      return <p className="countdown-timer">0{minutes}:{seconds}</p>
     }
   }
 
@@ -204,7 +238,22 @@ export const MyTurn = (props) => {
   }
 
   const saveSecondsRemaining = () => {
+    // Remove line 243 when commenting back in the fetch
     remainingTime -= 1000
+    // fetch(`/api/v1/games/${url}`, {
+    //   credentials: "same-origin",
+    //   method: 'PATCH',
+    //   body: JSON.stringify({"remainingTime": remainingTime-1000}),
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json"
+    //   }
+    // })
+    // .then(response => response.json())
+    // .then(response => {
+    //   remainingTime -= 1000
+    // })
+    // .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
   if (gameStarted && entries.length === 0 && timesUp === false) {
@@ -213,51 +262,54 @@ export const MyTurn = (props) => {
   }
 
   if (timesUp) {
-    return <Redirect to={`/game/${url}/scoreboard`} />
+    setTimeout(() => window.location.href = `/game/${url}/scoreboard`, 1500)
   }
 
   return (
-    <div>
-      {!gameStarted && (
-        <form className="start-button-container" onSubmit={handleStart}>
-          <input className="submit-button start-button" type="submit" value="START" />
-        </form>
-      )}
-      {gameStarted && currentEntry && (
-        <div className="my-turn-container">
-          <Countdown
-            start={startTimer}
-            onTick={saveSecondsRemaining}
-            onComplete={timesUpFunction}
-            date={time}
-            renderer={timeFormat}
-          />
+    <span>
+      <div></div>
+      <div>
+        {!gameStarted && (
+          <form className="start-button-container" onSubmit={handleStart}>
+            <input className="submit-button start-button" type="submit" value="START" />
+          </form>
+        )}
+        {gameStarted && currentEntry && (
+          <div className="my-turn-container">
+            <Countdown
+              start={startTimer}
+              onTick={saveSecondsRemaining}
+              onComplete={timesUpFunction}
+              date={time}
+              renderer={timeFormat}
+              />
 
-          <div className="outer-div grid-x grid-margin-x" >
-            <div className="cell large-2 medium-0 small-0"></div>
-            <div className="cell large-2 medium-12 small-12 details">
-              <div className="details-number">{skippedAnswers.length}</div>
-              <div>skipped</div>
-            </div>
-            <div className="cell large-4 medium-12 small-12 entry-name">
-              <div className="entry-inner-div">
-                {currentEntry.name}
+            <div className="outer-div grid-x grid-margin-x" >
+              <div className="cell large-2 medium-0 small-0"></div>
+              <div className="cell large-2 medium-12 small-12 details">
+                <div className="details-number">{skippedAnswers.length}</div>
+                <div>skipped</div>
               </div>
-              <br />
-              <div className="turn-buttons">
-                <button disabled={isButtonDisabled} onClick={handleSkip} type="button" tabIndex="-1" className="skip-button">Skip</button>
-                <button disabled={isButtonDisabled} onClick={handleCorrect} tabIndex="0" autofocus type="button" className="correct-button">Got it!</button>
+              <div className="cell large-4 medium-12 small-12 entry-name">
+                <div className="entry-inner-div">
+                  {currentEntry.name}
+                </div>
+                <br />
+                <div className="turn-buttons">
+                  <button disabled={isButtonDisabled} onClick={handleSkip} type="button" tabIndex="-1" className="skip-button">Skip</button>
+                  <button disabled={isButtonDisabled} onClick={handleCorrect} tabIndex="0" autofocus type="button" className="correct-button">Got it!</button>
+                </div>
               </div>
+              <div className="cell large-2 medium-12 small-12 details">
+                <div className="details-number">{correct}</div>
+                <div>correct</div>
+              </div>
+              <div className="cell large-2 medium-0 small-0"></div>
             </div>
-            <div className="cell large-2 medium-12 small-12 details">
-              <div className="details-number">{correct}</div>
-              <div>correct</div>
-            </div>
-            <div className="cell large-2 medium-0 small-0"></div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </span>
   )
 }
 

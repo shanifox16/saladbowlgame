@@ -5,6 +5,7 @@ import Form from './Form'
 import Home from './Home'
 import Scoreboard from './Scoreboard'
 import MyTurn from './MyTurn'
+import PrivacyPolicy from './PrivacyPolicy'
 import $ from 'jquery';
 
 export const App = (props) => {
@@ -102,6 +103,7 @@ export const App = (props) => {
           <Route exact path="/game/:url/form" component={Form} />
           <Route exact path="/game/:url/scoreboard" component={Scoreboard} />
           <Route exact path="/game/:url/myturn" component={MyTurn} />
+          <Route exact path="/privacypolicy" component={PrivacyPolicy} />
         </Switch>
       </BrowserRouter>
     </div>

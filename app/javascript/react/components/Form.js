@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import _ from "lodash"
 import ErrorList from "./ErrorList"
 
@@ -101,7 +101,7 @@ export const Form = (props) => {
   }
 
   if (redirect) {
-    return <Redirect to={`/game/${gameUrl}/scoreboard`} />
+    window.location.href = `/game/${gameUrl}/scoreboard`
   }
 
   return (
