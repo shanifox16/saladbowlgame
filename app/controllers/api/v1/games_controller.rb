@@ -36,6 +36,9 @@ class Api::V1::GamesController < ApiController
   def update
     current_game = Game.find_by(url: params[:id])
     current_game.seconds_remaining = params["remainingTime"]
+    if params["countdownTime"]
+      current_game.countdown_time = params["countdownTime"].to_i
+    end
     if params["turnInProgress"] == true || params["turnInProgress"] == false
       current_game.turn_in_progress = params["turnInProgress"]
     end

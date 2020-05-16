@@ -8,6 +8,7 @@ class CreateGame < ActiveRecord::Migration[5.2]
       t.boolean :is_active, default: true
       t.integer :seconds_remaining, null: false, default: 59000
       t.boolean :turn_in_progress, default: false
+      t.bigint :countdown_time
 
       t.timestamps
     end

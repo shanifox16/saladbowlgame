@@ -75,12 +75,14 @@ export const MyTurn = (props) => {
     if (remainingTime <= 1000) {
       remainingTime = turnLength
     }
+    time = Date.now() + remainingTime
     fetch(`/api/v1/games/${url}`, {
       credentials: "same-origin",
       method: 'PATCH',
       body: JSON.stringify({
         "remainingTime": remainingTime,
-        "turnInProgress": true
+        "turnInProgress": true,
+        "countdownTime": time
       }),
       headers: {
         Accept: "application/json",
@@ -89,7 +91,6 @@ export const MyTurn = (props) => {
     })
     .then(response => response.json())
     .catch(error => console.error(`Error in fetch: ${error.message}`))
-    time = Date.now() + remainingTime
     event.preventDefault()
     setGameStarted(true)
     getRandomEntry(entries)
@@ -204,7 +205,7 @@ export const MyTurn = (props) => {
     if (completed) {
       return <p className="countdown-timer">Time's Up!</p>
     } else if (seconds < 10) {
-      return <p className="countdown-timer">0{minutes}:0{seconds}</p>
+      return <p className="countdown-timer countdown-timer-red">0{minutes}:0{seconds}</p>
     } else {
       return <p className="countdown-timer">0{minutes}:{seconds}</p>
     }
@@ -233,7 +234,7 @@ export const MyTurn = (props) => {
     .then(body => {
       if (!!body.id) {
         correct = 0
-        setTimesUp(true)
+        setTimeout(() => setTimesUp(true), 2000)
       } else {
         alert("Yikes, we couldn't record your answer. That's our bad.")
       }

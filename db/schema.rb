@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 2020_05_05_024515) do
     t.boolean "is_active", default: true
     t.integer "seconds_remaining", default: 59000, null: false
     t.boolean "turn_in_progress", default: false
+    t.bigint "countdown_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

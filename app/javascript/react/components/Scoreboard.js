@@ -42,7 +42,9 @@ export const Scoreboard = (props) => {
     .then(data => {
       if (turnInProgress === false && data.turn_in_progress === true) {
         console.log("Changing turn in progress to true")
-        scoreboardTime = Date.now() + data.seconds_remaining - 1000
+        console.log(`Database Time:${data.countdown_time}`)
+        // scoreboardTime = Date.now() + data.seconds_remaining - 1000
+        scoreboardTime = data.countdown_time
         setTurnInProgress(data.turn_in_progress)
         // setSecondsRemaining(data.seconds_remaining)
       }
@@ -177,18 +179,17 @@ export const Scoreboard = (props) => {
   )
 
   const timeFormat = ({ minutes, seconds, completed }) => {
-    console.log(`Seconds: ${seconds}`)
-    if (completed) {
-      return <p className="countdown-timer">Time's Up!</p>
-    } else if (seconds < 10) {
-      return <p className="countdown-timer">0{minutes}:0{seconds}</p>
+    // if (completed) {
+      // return <p className="countdown-timer">Time's Up!</p>
+    // } else
+    if (seconds < 10) {
+      return <p className="countdown-timer countdown-timer-red">0{minutes}:0{seconds}</p>
     } else {
       return <p className="countdown-timer">0{minutes}:{seconds}</p>
     }
   }
 
   const onTickFunction = () => {
-    console.log(scoreboardTime)
     scoreboardTime -= 1
   }
 
@@ -206,7 +207,6 @@ export const Scoreboard = (props) => {
     //   return `1:${seconds-60}`
     // }
 
-    console.log(`Time: ${scoreboardTime}`)
     return (
       <Countdown
         start={turnInProgress}
@@ -283,7 +283,7 @@ export const Scoreboard = (props) => {
                     <span className="small-text">Time</span><br/>
                     {renderCountdown()}
                   </th>
-                  <th colspan="2"><span className="small-text">Names Left</span><br/>{entriesLeftInRound}</th>
+                  <th colspan="2"><span className="small-text">Remaining</span><br/>{entriesLeftInRound}</th>
                 </tr>
               </thead>
               <tbody>
