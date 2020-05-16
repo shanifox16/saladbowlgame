@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import { Redirect } from 'react-router-dom'
 import Countdown from 'react-countdown';
 
-let turnLength = 60000
+let turnLength = 20000
 let remainingTime = turnLength
 let time
 let correct = 0
@@ -49,17 +50,17 @@ export const MyTurn = (props) => {
     .then(round => {
       if (round === 1) {
         remainingTime = turnLength
-        // fetch(`/api/v1/games/${url}`, {
-        //   credentials: "same-origin",
-        //   method: 'PATCH',
-        //   body: JSON.stringify({"remainingTime": remainingTime}),
-        //   headers: {
-        //     Accept: "application/json",
-        //     "Content-Type": "application/json"
-        //   }
-        // })
-        // .then(response => response.json())
-        // .catch(error => console.error(`Error in fetch: ${error.message}`))
+        fetch(`/api/v1/games/${url}`, {
+          credentials: "same-origin",
+          method: 'PATCH',
+          body: JSON.stringify({"remainingTime": remainingTime}),
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
+        })
+        .then(response => response.json())
+        .catch(error => console.error(`Error in fetch: ${error.message}`))
       }
 
     })
@@ -73,18 +74,21 @@ export const MyTurn = (props) => {
   const handleStart = event => {
     if (remainingTime <= 1000) {
       remainingTime = turnLength
-      // fetch(`/api/v1/games/${url}`, {
-      //   credentials: "same-origin",
-      //   method: 'PATCH',
-      //   body: JSON.stringify({"remainingTime": remainingTime}),
-      //   headers: {
-      //     Accept: "application/json",
-      //     "Content-Type": "application/json"
-      //   }
-      // })
-      // .then(response => response.json())
-      // .catch(error => console.error(`Error in fetch: ${error.message}`))
     }
+    fetch(`/api/v1/games/${url}`, {
+      credentials: "same-origin",
+      method: 'PATCH',
+      body: JSON.stringify({
+        "remainingTime": remainingTime,
+        "turnInProgress": true
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .catch(error => console.error(`Error in fetch: ${error.message}`))
     time = Date.now() + remainingTime
     event.preventDefault()
     setGameStarted(true)
@@ -146,29 +150,29 @@ export const MyTurn = (props) => {
             .then(response => response.json())
             .then(body => {
               if (!!body.id) {
-                if (body.round === 4) {
-                  remainingTime = turnLength
-                  // fetch(`/api/v1/games/${url}`, {
-                  //   credentials: "same-origin",
-                  //   method: 'PATCH',
-                  //   body: JSON.stringify({"remainingTime": remainingTime}),
-                  //   headers: {
-                  //     Accept: "application/json",
-                  //     "Content-Type": "application/json"
-                  //   }
-                  // })
-                  // .then(response => response.json())
-                  // .catch(error => console.error(`Error in fetch: ${error.message}`))
-                }
+                fetch(`/api/v1/games/${url}`, {
+                  credentials: "same-origin",
+                  method: 'PATCH',
+                  body: JSON.stringify({
+                    "remainingTime": remainingTime,
+                    "turnInProgress": false
+                  }),
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json"
+                  }
+                })
+                .then(response => response.json())
+                .catch(error => console.error(`Error in fetch: ${error.message}`))
                 correct = 0
-                setTimesUp(true)
+                setTimeout(() => setTimesUp(true), 1000)
               } else {
                 alert("Yikes, we couldn't record your answer. That's our bad.")
               }
             })
             .catch(error => console.error(`Error in fetch: ${error.message}`))
             correct = 0
-            setTimesUp(true)
+            setTimeout(() => setTimesUp(true), 1000)
           }
         } else {
           alert("Yikes, we couldn't record your answer. That's our bad.")
@@ -235,6 +239,20 @@ export const MyTurn = (props) => {
       }
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
+    fetch(`/api/v1/games/${url}`, {
+      credentials: "same-origin",
+      method: 'PATCH',
+      body: JSON.stringify({
+        "remainingTime": remainingTime,
+        "turnInProgress": false
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    })
+    .then(response => response.json())
+    .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
   const saveSecondsRemaining = () => {
@@ -256,13 +274,14 @@ export const MyTurn = (props) => {
     // .catch(error => console.error(`Error in fetch: ${error.message}`))
   }
 
-  if (gameStarted && entries.length === 0 && timesUp === false) {
-    correct = 0
-    setTimesUp(true)
-  }
+  // if (gameStarted && entries.length === 0 && timesUp === false) {
+  //   correct = 0
+  //   setTimesUp(true)
+  // }
 
   if (timesUp) {
-    setTimeout(() => window.location.href = `/game/${url}/scoreboard`, 1500)
+    // setTimeout(() => window.location.href = `/game/${url}/scoreboard`, 1500)
+    return <Redirect to={`/game/${url}/scoreboard`} />
   }
 
   return (
@@ -278,11 +297,12 @@ export const MyTurn = (props) => {
           <div className="my-turn-container">
             <Countdown
               start={startTimer}
+              key={1}
               onTick={saveSecondsRemaining}
               onComplete={timesUpFunction}
               date={time}
               renderer={timeFormat}
-              />
+            />
 
             <div className="outer-div grid-x grid-margin-x" >
               <div className="cell large-2 medium-0 small-0"></div>

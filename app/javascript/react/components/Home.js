@@ -226,9 +226,9 @@ export const Home = (props) => {
           </form>
         )}
       </div>
-      {/* <footer>
+      <footer>
         <a href="/privacypolicy" target="_blank">Privacy Policy</a>
-      </footer> */}
+      </footer>
     </span>
   )
 }

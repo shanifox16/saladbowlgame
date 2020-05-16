@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
+import Countdown from 'react-countdown';
+
+let scoreboardTime = 19000
 
 export const Scoreboard = (props) => {
   const [timer, setTimer] = useState(0)
-  const [secondsRemaining, setSecondsRemaining] = useState(60000)
+  // const [secondsRemaining, setSecondsRemaining] = useState(9000)
+  const [turnInProgress, setTurnInProgress] = useState(false)
   const [redScoreRoundOne, setRedScoreRoundOne] = useState(0)
   const [redScoreRoundTwo, setRedScoreRoundTwo] = useState(0)
   const [redScoreRoundThree, setRedScoreRoundThree] = useState(0)
@@ -36,7 +40,18 @@ export const Scoreboard = (props) => {
     })
     .then(response => response.json())
     .then(data => {
-      setSecondsRemaining(data.seconds_remaining)
+      if (turnInProgress === false && data.turn_in_progress === true) {
+        console.log("Changing turn in progress to true")
+        scoreboardTime = Date.now() + data.seconds_remaining - 1000
+        setTurnInProgress(data.turn_in_progress)
+        // setSecondsRemaining(data.seconds_remaining)
+      }
+      if (turnInProgress === true && data.turn_in_progress === false) {
+        console.log("Changing turn in progress to false")
+        setTurnInProgress(data.turn_in_progress)
+        location.reload()
+        // setSecondsRemaining(data.seconds_remaining)
+      }
       setRedScoreRoundOne(data.red_score_round_one.length)
       setRedScoreRoundTwo(data.red_score_round_two.length)
       setRedScoreRoundThree(data.red_score_round_three.length)
@@ -57,7 +72,6 @@ export const Scoreboard = (props) => {
     const timeout = setTimeout(() => {
       setTimer(timer + 1);
     }, 3000)
-    // }, 500)
     return () => clearTimeout(timeout)
   }, [timer])
 
@@ -117,7 +131,8 @@ export const Scoreboard = (props) => {
   }
 
   if (redirectPath) {
-    window.location.href = `/game/${url}${redirectPath}`
+    return <Redirect to={`/game/${url}${redirectPath}`} />
+    // window.location.href = `/game/${url}${redirectPath}`
   }
 
   if (totalEntries === 0) {
@@ -134,13 +149,13 @@ export const Scoreboard = (props) => {
 
   const blueTeamPlayerList = blueTeam.map(player => {
     return (
-      <div>{player.name}</div>
+      <div key={player.name}>{player.name}</div>
     )
   })
 
   const redTeamPlayerList = redTeam.map(player => {
     return (
-      <div>{player.name}</div>
+      <div key={player.name}>{player.name}</div>
     )
   })
 
@@ -161,19 +176,46 @@ export const Scoreboard = (props) => {
     </table>
   )
 
-  const formatSecondsRemaining = () => {
-    let seconds = secondsRemaining/1000
-    if (seconds < 60 && seconds > 9) {
-      return `:${seconds}`
-    } else if (seconds <= 9 && seconds > 1) {
-      return `:0${seconds}`
-    } else if (seconds === 60) {
-      return "1:00"
-    } else if (seconds <= 1) {
-      return ":00"
+  const timeFormat = ({ minutes, seconds, completed }) => {
+    console.log(`Seconds: ${seconds}`)
+    if (completed) {
+      return <p className="countdown-timer">Time's Up!</p>
+    } else if (seconds < 10) {
+      return <p className="countdown-timer">0{minutes}:0{seconds}</p>
     } else {
-      return `1:${seconds-60}`
+      return <p className="countdown-timer">0{minutes}:{seconds}</p>
     }
+  }
+
+  const onTickFunction = () => {
+    console.log(scoreboardTime)
+    scoreboardTime -= 1
+  }
+
+  const renderCountdown = () => {
+    // let seconds = secondsRemaining/1000
+    // if (seconds < 60 && seconds > 9) {
+    //   return `:${seconds}`
+    // } else if (seconds <= 9 && seconds > 1) {
+    //   return `:0${seconds}`
+    // } else if (seconds === 60) {
+    //   return "1:00"
+    // } else if (seconds <= 1) {
+    //   return ":00"
+    // } else {
+    //   return `1:${seconds-60}`
+    // }
+
+    console.log(`Time: ${scoreboardTime}`)
+    return (
+      <Countdown
+        start={turnInProgress}
+        onTick={onTickFunction}
+        key={2}
+        date={scoreboardTime}
+        renderer={timeFormat}
+      />
+    )
   }
 
   const getCurrentTeamRound = () => {
@@ -237,8 +279,11 @@ export const Scoreboard = (props) => {
             <table className="score-table">
               <thead>
                 <tr>
-                  {/* <th><span className="small-text">Time</span><br/>{formatSecondsRemaining()}</th> */}
-                  <th colspan="3"><span className="small-text">Names Left</span><br/>{entriesLeftInRound}</th>
+                  <th>
+                    <span className="small-text">Time</span><br/>
+                    {renderCountdown()}
+                  </th>
+                  <th colspan="2"><span className="small-text">Names Left</span><br/>{entriesLeftInRound}</th>
                 </tr>
               </thead>
               <tbody>

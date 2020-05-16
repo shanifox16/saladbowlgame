@@ -3,6 +3,7 @@ class Api::V1::NotificationsController < ApiController
     current_game = Game.find_by(url: params["game_id"])
     current_players = current_game.players
     seconds_remaining = current_game.seconds_remaining
+    turn_in_progress = current_game.turn_in_progress
     blue_team_players = current_players.where(team: "Blue")
     red_team_players = current_players.where(team: "Red")
     current_entries = current_game.entries
@@ -26,6 +27,7 @@ class Api::V1::NotificationsController < ApiController
 
     render json: {
       seconds_remaining: seconds_remaining,
+      turn_in_progress: turn_in_progress,
       red_score_round_one: red_score_round_one,
       red_score_round_two: red_score_round_two,
       red_score_round_three: red_score_round_three,
