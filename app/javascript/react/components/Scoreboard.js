@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import Countdown from 'react-countdown';
 
-let scoreboardTime = 19000
+let scoreboardTime = 59000
 
 export const Scoreboard = (props) => {
   const [timer, setTimer] = useState(0)
@@ -288,27 +288,30 @@ export const Scoreboard = (props) => {
               </thead>
               <tbody>
                 <tr>
-                  <td>Red</td>
-                  <td>Blue</td>
+                  <td>Red score</td>
+                  <td>Blue score</td>
                 </tr>
                 <tr>
-                  <td className={getCurrentTeamRound() === "R1" ? "R1" : ""}><br/>{redScoreRoundOne}</td>
-                  <td className={getCurrentTeamRound() === "B1" ? "B1" : ""}><br/>{blueScoreRoundOne}</td>
+                  <td className={getCurrentTeamRound() === "R1" ? "R1" : ""}><span className="small-text">R1</span>{redScoreRoundOne}</td>
+                  <td className={getCurrentTeamRound() === "B1" ? "B1" : ""}>{blueScoreRoundOne}</td>
                 </tr>
                 <tr>
-                  <td className={getCurrentTeamRound() === "R2" ? "R2" : ""}>{redScoreRoundTwo}</td>
+                  <td className={getCurrentTeamRound() === "R2" ? "R2" : ""}><span className="small-text">R2</span>{redScoreRoundTwo}</td>
                   <td className={getCurrentTeamRound() === "B2" ? "B2" : ""}>{blueScoreRoundTwo}</td>
                 </tr>
                 <tr>
-                  <td className={getCurrentTeamRound() === "R3" ? "R3" : ""}>{redScoreRoundThree}</td>
+                  <td className={getCurrentTeamRound() === "R3" ? "R3" : ""}><span className="small-text">R3</span>{redScoreRoundThree}</td>
                   <td className={getCurrentTeamRound() === "B3" ? "B3" : ""}>{blueScoreRoundThree}</td>
                 </tr>
                 <tr>
-                  <td>{redScoreTotal}</td>
+                  <td><span className="small-text small-right">Total</span><span className="big-center">{redScoreTotal}</span></td>
                   <td>{blueScoreTotal}</td>
                 </tr>
               </tbody>
             </table>
+            <span>
+              {playerTable}
+            </span>
           </span>
         )}
 
@@ -317,12 +320,6 @@ export const Scoreboard = (props) => {
           <form onSubmit={myTurn}>
             <input type="submit" className="submit-button" value="My Turn" />
           </form>
-        )}
-        <br />
-        {currentRound !== 0 && (
-          <span>
-            {playerTable}
-          </span>
         )}
       </div>
     </div>

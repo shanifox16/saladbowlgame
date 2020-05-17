@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
 import Countdown from 'react-countdown';
 
-let turnLength = 20000
+let turnLength = 60000
 let remainingTime = turnLength
 let time
 let correct = 0
