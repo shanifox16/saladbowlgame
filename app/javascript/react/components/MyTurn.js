@@ -76,6 +76,7 @@ export const MyTurn = (props) => {
       remainingTime = turnLength
     }
     time = Date.now() + remainingTime
+    console.log(`Time to send as countdownTime: ${time}`)
     fetch(`/api/v1/games/${url}`, {
       credentials: "same-origin",
       method: 'PATCH',

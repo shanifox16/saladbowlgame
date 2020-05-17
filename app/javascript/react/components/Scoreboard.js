@@ -283,27 +283,27 @@ export const Scoreboard = (props) => {
                     <span className="small-text">Time</span><br/>
                     {renderCountdown()}
                   </th>
-                  <th colspan="2"><span className="small-text">Remaining</span><br/>{entriesLeftInRound}</th>
+                  <th><span className="small-text">Remaining</span><br/>{entriesLeftInRound}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>ROUND 1</td>
-                  <td className={getCurrentTeamRound() === "R1" ? "R1" : ""}><span className="small-text">Red</span><br/>{redScoreRoundOne}</td>
-                  <td className={getCurrentTeamRound() === "B1" ? "B1" : ""}><span className="small-text">Blue</span><br/>{blueScoreRoundOne}</td>
+                  <td>Red</td>
+                  <td>Blue</td>
                 </tr>
                 <tr>
-                  <td>ROUND 2</td>
+                  <td className={getCurrentTeamRound() === "R1" ? "R1" : ""}><br/>{redScoreRoundOne}</td>
+                  <td className={getCurrentTeamRound() === "B1" ? "B1" : ""}><br/>{blueScoreRoundOne}</td>
+                </tr>
+                <tr>
                   <td className={getCurrentTeamRound() === "R2" ? "R2" : ""}>{redScoreRoundTwo}</td>
                   <td className={getCurrentTeamRound() === "B2" ? "B2" : ""}>{blueScoreRoundTwo}</td>
                 </tr>
                 <tr>
-                  <td>ROUND 3</td>
                   <td className={getCurrentTeamRound() === "R3" ? "R3" : ""}>{redScoreRoundThree}</td>
                   <td className={getCurrentTeamRound() === "B3" ? "B3" : ""}>{blueScoreRoundThree}</td>
                 </tr>
                 <tr>
-                  <td>TOTAL</td>
                   <td>{redScoreTotal}</td>
                   <td>{blueScoreTotal}</td>
                 </tr>
