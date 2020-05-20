@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import Countdown from 'react-countdown';
 
@@ -6,7 +6,8 @@ let scoreboardTime = 59000
 
 export const Scoreboard = (props) => {
   const [timer, setTimer] = useState(0)
-  // const [secondsRemaining, setSecondsRemaining] = useState(9000)
+  const [loading, setLoading] = useState(true)
+  const [secondsRemaining, setSecondsRemaining] = useState(0)
   const [turnInProgress, setTurnInProgress] = useState(false)
   const [redScoreRoundOne, setRedScoreRoundOne] = useState(0)
   const [redScoreRoundTwo, setRedScoreRoundTwo] = useState(0)
@@ -43,17 +44,15 @@ export const Scoreboard = (props) => {
       if (turnInProgress === false && data.turn_in_progress === true) {
         console.log("Changing turn in progress to true")
         console.log(`Database Time:${data.countdown_time}`)
-        // scoreboardTime = Date.now() + data.seconds_remaining - 1000
         scoreboardTime = data.countdown_time
         setTurnInProgress(data.turn_in_progress)
-        // setSecondsRemaining(data.seconds_remaining)
       }
       if (turnInProgress === true && data.turn_in_progress === false) {
         console.log("Changing turn in progress to false")
         setTurnInProgress(data.turn_in_progress)
         location.reload()
-        // setSecondsRemaining(data.seconds_remaining)
       }
+      setSecondsRemaining(data.seconds_remaining)
       setRedScoreRoundOne(data.red_score_round_one.length)
       setRedScoreRoundTwo(data.red_score_round_two.length)
       setRedScoreRoundThree(data.red_score_round_three.length)
@@ -68,6 +67,7 @@ export const Scoreboard = (props) => {
       setCurrentRound(data.current_round)
       setBlueTeam(data.blue_team_players)
       setRedTeam(data.red_team_players)
+      setLoading(false)
     })
     .catch(error => console.error(`Error in fetch: ${error.message}`))
 
@@ -162,11 +162,11 @@ export const Scoreboard = (props) => {
   })
 
   const playerTable = (
-    <table className="player-table">
+    <table className="score-table cell small-12 medium-6 large-4">
       <thead>
         <tr>
-          <th className="th-red">Red Team</th>
-          <th className="th-blue">Blue Team</th>
+          <th className="small-text">Red Team</th>
+          <th className="small-text">Blue Team</th>
         </tr>
       </thead>
       <tbody>
@@ -179,13 +179,10 @@ export const Scoreboard = (props) => {
   )
 
   const timeFormat = ({ minutes, seconds, completed }) => {
-    // if (completed) {
-      // return <p className="countdown-timer">Time's Up!</p>
-    // } else
     if (seconds < 10) {
-      return <p className="countdown-timer countdown-timer-red">0{minutes}:0{seconds}</p>
+      return <p className="scoreboard-header scoreboard-timer">:0{seconds}</p>
     } else {
-      return <p className="countdown-timer">0{minutes}:{seconds}</p>
+      return <p className="scoreboard-header scoreboard-timer">0{minutes}:{seconds}</p>
     }
   }
 
@@ -194,19 +191,13 @@ export const Scoreboard = (props) => {
   }
 
   const renderCountdown = () => {
-    // let seconds = secondsRemaining/1000
-    // if (seconds < 60 && seconds > 9) {
-    //   return `:${seconds}`
-    // } else if (seconds <= 9 && seconds > 1) {
-    //   return `:0${seconds}`
-    // } else if (seconds === 60) {
-    //   return "1:00"
-    // } else if (seconds <= 1) {
-    //   return ":00"
-    // } else {
-    //   return `1:${seconds-60}`
-    // }
-
+    if (!turnInProgress && secondsRemaining !== 1000) {
+      if (secondsRemaining < 60000) {
+        return <p className="scoreboard-header scoreboard-timer">:{secondsRemaining/1000}</p>
+      } else {
+        return <p className="scoreboard-header scoreboard-timer">01:00</p>
+      }
+    }
     return (
       <Countdown
         start={turnInProgress}
@@ -234,94 +225,148 @@ export const Scoreboard = (props) => {
     }
   }
 
-  const roundRules = () => {
-    if (currentRound === 1) {
-      return `Use words (no hand gestures) to get your teammates to guess the ${nameTerm}, without saying it yourself. Teams will alternate until all ${nameTerms} have been guessed.`
-    } else if (currentRound === 2) {
-      return `You can only say one word for each ${nameTerm}. You can repeat the word as many times as desired (or even sing it)`
-    } else if (currentRound === 3) {
-      return "Charades! (no talking allowed)"
+  const myTurnButton = () => {
+    if (!turnInProgress) {
+      return (
+        <form onSubmit={myTurn}>
+          <input type="submit" className="submit-button" value="My Turn" />
+        </form>
+      )
     }
   }
 
+  const roundRules = () => {
+    if (currentRound === 0) {
+      return (
+        <span className="round-rules">
+          <h5><strong>PREPARE FOR ROUND 1</strong></h5>
+          <p>The <strong>{currentTeam}</strong> team will go first</p>
+          <p>Once all players have finished submitting 5 {nameTerms}, the first player should click &quot;My Turn&quot;</p>
+          <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
+          {myTurnButton()}
+        </span>
+      )
+    }
+    if (currentRound === 1) {
+      return (
+        <span className="round-rules">
+          <h5><strong>ROUND 1</strong></h5>
+          <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
+          {myTurnButton()}
+        </span>
+      )
+    } else if (currentRound === 2) {
+      return (
+        <span className="round-rules">
+          <h5><strong>ROUND 2</strong></h5>
+          <p>In this round, the player giving clues tries to get their teammates to guess each name, without saying the name itself. They can only say <strong>one</strong> word for each clue. They can repeat the words as many times as desired (or even sing it).</p>
+          {myTurnButton()}
+        </span>
+      )
+    } else if (currentRound === 3) {
+      return (
+        <span className="round-rules">
+          <h5><strong>ROUND 3</strong></h5>
+          <p>Charades! (no talking allowed)</p>
+          {myTurnButton()}
+        </span>
+      )
+    } else {
+      return (
+        <span className="round-rules">
+          <h5><strong>GAME OVER</strong></h5>
+          {redScoreTotal === blueScoreTotal ? (
+            <p>No way! It's a tie!</p>
+          ): (
+            <p>{redScoreTotal > blueScoreTotal ? "Red" : "Blue"} team wins!</p>
+          )}
+          <form onSubmit={resetGame}>
+            <input type="submit" className="submit-button" value="Play Again?" />
+          </form>
+        </span>
+      )
+    }
+  }
+
+  const midgameScoreboard = (
+    <table className="score-table cell small-12 medium-6 large-4">
+      <thead>
+        <tr>
+          <th className={currentTeam === "Red" ? "timer-red" : "timer-blue"} colspan="2">
+            <span className="small-text half-column beige-text">Time</span><br/>
+            {renderCountdown()}
+          </th>
+          <th><span className="small-text half-column">Names Left</span><br/>
+            <p className="scoreboard-header">{entriesLeftInRound}</p>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td colspan="2" className="half-column small-text">Red score</td>
+          <td className="half-column small-text">Blue score</td>
+        </tr>
+        <tr>
+          <td className="small-text">R1</td>
+          <td className={`red-column ${getCurrentTeamRound() === "R1" ? "R1" : ""}`}>{redScoreRoundOne}</td>
+          <td className={`half-column ${getCurrentTeamRound() === "B1" ? "B1" : ""}`}>{blueScoreRoundOne}</td>
+        </tr>
+        <tr>
+          <td className="small-text">R2</td>
+          <td className={`red-column ${getCurrentTeamRound() === "R2" ? "R2" : ""}`}>{redScoreRoundTwo}</td>
+          <td className={`half-column ${getCurrentTeamRound() === "B2" ? "B2" : ""}`}>{blueScoreRoundTwo}</td>
+        </tr>
+        <tr>
+          <td className="small-text">R3</td>
+          <td className={`red-column ${getCurrentTeamRound() === "R3" ? "R3" : ""}`}>{redScoreRoundThree}</td>
+          <td className={`half-column ${getCurrentTeamRound() === "B3" ? "B3" : ""}`}>{blueScoreRoundThree}</td>
+        </tr>
+        <tr>
+          <td className="small-text">Total</td>
+          <td className="red-column">{redScoreTotal}</td>
+          <td className="half-column">{blueScoreTotal}</td>
+        </tr>
+      </tbody>
+    </table>
+  )
+
   return (
     <div>
-      <div>
-        <form className="reset-button-container" onSubmit={resetGame}>
-          <input type="submit" className="reset-button" value="Start New Game" />
-        </form>
-      </div>
-      <div className="scoreboard">
-        {currentRound === 0 && (
-          <span>
-            <p>Prepare for Round 1</p>
-            {playerTable}
-            <p>The <strong>{currentTeam}</strong> team will go first</p>
-            <p>Once all players have finished submitting 5 {nameTerms}, the first player should click &quot;My Turn&quot;</p>
-            <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
-          </span>
-        )}
-        {currentRound === 4 && (
-          <span>
-            <p><strong>GAME OVER</strong></p>
-            {redScoreTotal === blueScoreTotal ? (
-              <p>No way! It's a tie!</p>
-            ): (
-              <p>{redScoreTotal > blueScoreTotal ? "Red" : "Blue"} team wins!</p>
-            )}
-          </span>
-        )}
-        {currentRound !== 0 && currentRound !== 4 && (
-          <p title={roundRules()}>Round <strong>{currentRound}</strong> (hover for rules)</p>
-        )}
-        {currentRound !== 0 && (
-          <span>
-            <table className="score-table">
-              <thead>
-                <tr>
-                  <th>
-                    <span className="small-text">Time</span><br/>
-                    {renderCountdown()}
-                  </th>
-                  <th><span className="small-text">Remaining</span><br/>{entriesLeftInRound}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Red score</td>
-                  <td>Blue score</td>
-                </tr>
-                <tr>
-                  <td className={getCurrentTeamRound() === "R1" ? "R1" : ""}><span className="small-text">R1</span>{redScoreRoundOne}</td>
-                  <td className={getCurrentTeamRound() === "B1" ? "B1" : ""}>{blueScoreRoundOne}</td>
-                </tr>
-                <tr>
-                  <td className={getCurrentTeamRound() === "R2" ? "R2" : ""}><span className="small-text">R2</span>{redScoreRoundTwo}</td>
-                  <td className={getCurrentTeamRound() === "B2" ? "B2" : ""}>{blueScoreRoundTwo}</td>
-                </tr>
-                <tr>
-                  <td className={getCurrentTeamRound() === "R3" ? "R3" : ""}><span className="small-text">R3</span>{redScoreRoundThree}</td>
-                  <td className={getCurrentTeamRound() === "B3" ? "B3" : ""}>{blueScoreRoundThree}</td>
-                </tr>
-                <tr>
-                  <td><span className="small-text small-right">Total</span><span className="big-center">{redScoreTotal}</span></td>
-                  <td>{blueScoreTotal}</td>
-                </tr>
-              </tbody>
-            </table>
-            <span>
-              {playerTable}
-            </span>
-          </span>
-        )}
-
-        <br />
-        {currentRound !== 4 && (
-          <form onSubmit={myTurn}>
-            <input type="submit" className="submit-button" value="My Turn" />
+    {loading ? (
+      <Fragment>
+        <div>
+          <form className="reset-button-container" onSubmit={resetGame}>
+            <input type="submit" className="reset-button" value="Start New Game" />
           </form>
-        )}
-      </div>
+        </div>
+        <div className="scoreboard">
+          <div class="grid-container">
+            <div className="grid-x grid-margin-x">
+              {roundRules()}
+            </div>
+          </div>
+        </div>
+      </Fragment>
+    ) : (
+      <Fragment>
+        <div>
+          <form className="reset-button-container" onSubmit={resetGame}>
+            <input type="submit" className="reset-button" value="Start New Game" />
+          </form>
+        </div>
+        <div className="scoreboard">
+          <div class="grid-container">
+            <div className="grid-x grid-margin-x">
+              {roundRules()}
+              {midgameScoreboard}
+              <Fragment>
+                {playerTable}
+              </Fragment>
+            </div>
+          </div>
+        </div>
+      </Fragment>
+    )}
     </div>
   )
 }

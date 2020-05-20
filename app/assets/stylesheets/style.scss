@@ -29,7 +29,7 @@ footer {
 }
 
 .submit-button {
-  background-color: #292412;
+  background-color: #7FBB48;
   color: #faf6ee;
   border: none;
   font-size: 20px;
@@ -189,39 +189,68 @@ footer {
 	min-height: 100vh;
 }
 
+.round-rules {
+	width: 390px;
+	text-align: left;
+}
+
+.scoreboard-header {
+	font-size: 2em;
+}
+
+.scoreboard-timer {
+	color: #faf6ee;
+}
+
 .score-table {
-  text-align: center;
   border-color: black;
-  margin: 0 30% 0 30%;
-  width: 40%;
+  width: 380;
 	font-size: 1.6em;
+	background: #F1EDE4;
+	border: #292412;
 
 	.small-text {
-		font-size: .5em;
+		font-size: .6em;
+		color: #8B877C;
 	}
 
-	thead {
-		background: #F1F1F1;
-		border: #292412;
+	.beige-text {
+		color: #faf6ee;
 	}
 
 	th, td {
 		text-align: center;
-		background: #F1F1F1;
+		background: #F1EDE4;
 		border: 4px solid #faf6ee;
 		border-radius: 10px;
 	}
 
+	.half-column {
+		width: 190px;
+	}
+
+	.red-column {
+		width: 145px;
+	}
+
+	.timer-red {
+		background-color: #EF5227;
+	}
+
+	.timer-blue {
+		background-color: #515BF2;
+	}
+
 	.R1 {
-		background-color: #F25162;
+		background-color: #EF5227;
 		color: #faf6ee;
 	}
 	.R2 {
-		background-color: #F25162;
+		background-color: #EF5227;
 		color: #faf6ee;
 	}
 	.R3 {
-		background-color: #F25162;
+		background-color: #EF5227;
 		color: #faf6ee;
 	}
 	.B1 {
@@ -242,14 +271,6 @@ footer {
 	th {
     text-align: center;
   }
-
-	.th-red {
-		color: #F25162;
-	}
-
-	.th-blue {
-		color: #515BF2;
-	}
 
 	thead {
 		background: transparent;

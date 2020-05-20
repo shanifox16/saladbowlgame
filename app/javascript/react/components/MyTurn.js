@@ -17,6 +17,8 @@ export const MyTurn = (props) => {
   const [timesUp, setTimesUp] = useState(false)
   const [isButtonDisabled, setIsButtonDisabled] = useState(false)
   const buzzer = new Audio("https://freesound.org/data/previews/414/414208_6938106-lq.mp3")
+  const startingSound = new Audio("https://freesound.org/data/previews/368/368691_4930962-lq.mp3")
+  const gotItSound = new Audio("https://freesound.org/data/previews/126/126418_1666767-lq.mp3")
   const url = props.match.params.url
 
   useEffect(() => {
@@ -75,6 +77,7 @@ export const MyTurn = (props) => {
     if (remainingTime <= 1000) {
       remainingTime = turnLength
     }
+    startingSound.play()
     time = Date.now() + remainingTime
     console.log(`Time to send as countdownTime: ${time}`)
     fetch(`/api/v1/games/${url}`, {
@@ -100,6 +103,7 @@ export const MyTurn = (props) => {
 
   const handleCorrect = event => {
     event.preventDefault()
+    gotItSound.play()
     if (event.type === "click" || (event.type === "keydown" && event.key === "Enter")) {
       fetch(`/api/v1/games/${url}/entries/${currentEntry.id}`, {
         credentials: "same-origin",

@@ -56,6 +56,8 @@ class Api::V1::NotificationsController < ApiController
       all_entries.delete_all
       all_players.delete_all
       current_game.round = 0
+      current_game.seconds_remaining = 60000
+      current_game.countdown_time = nil
       current_game.save
 
       render json: {success: "Game has been reset"}
