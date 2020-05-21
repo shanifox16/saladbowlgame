@@ -1,12 +1,25 @@
 @font-face {
-	font-family: 'apercu';
-	src: url('../images/apercu.otf');
+	font-family: 'Geogrotesque-Bold';
+	src: url('../fonts/Geogrotesque-Bold.otf');
 }
 
 @font-face {
-	font-family: 'apercu-bold';
-	src: url('../images/apercu-bold.otf');
-  font-weight: bold;
+	font-family: 'Geogrotesque-Medium';
+	src: url('../fonts/Geogrotesque-Medium.otf');
+}
+
+@font-face {
+	font-family: 'Geogrotesque-Regular';
+	src: url('../fonts/Geogrotesque-Regular.otf');
+}
+
+@font-face {
+	font-family: 'GEOGROTESQUE-SEMIBOLD';
+	src: url('../fonts/GEOGROTESQUE-SEMIBOLD.otf');
+}
+
+body, h1, h2, h3, h4, h5, h6 {
+	font-family: 'Geogrotesque-Regular', sans-serif !important;
 }
 
 .app {
@@ -14,32 +27,50 @@
   background-size: cover;
   background-color: #faf6ee;
   background-blend-mode: lighten;
-  // overflow: hidden;
-  position: relative;
-  // font-family: 'apercu', sans-serif;
-	// font-family: 'apercu-bold', sans-serif;
-	font-family: 'Baloo Tamma 2', cursive;
-  color: #292412;
-  -webkit-font-smoothing: antialiased;
+	color: #292412;
+	-webkit-font-smoothing: antialiased;
+	// New from Liat:
+	margin: 0;
+	font-family: 'Geogrotesque-Regular', sans-serif !important;
+	height: 882px;
+	position: absolute;
+	width: 100%;
+	overflow-x: hidden;
 }
 
-footer {
+@media (min-width: 400px) {
+	.app {
+		position: relative;
+	}
+}
+
+header {
 	text-align: right;
 	bottom: 0;
+	position: absolute;
+
+	a {
+		color: black;
+	}
 }
 
 .submit-button {
-  background-color: #7FBB48;
-  color: #faf6ee;
-  border: none;
   font-size: 20px;
   font-weight: bold;
-  font-family: "Apercu";
-  border-radius: 24px;
   min-width: 176px;
-  padding: 12px;
-  margin: 22px;
-  cursor: pointer;
+	cursor: pointer;
+	// New from Liat:
+  margin: 20px;
+	padding: 10px;
+	border-radius: 5px;
+	border-color: #ff9e9d;
+	background-color: #ff9e9d;
+	// background-color: #7FBB48;
+	// color: #faf6ee;
+	// padding: 12px;
+  // margin: 22px;
+	// border-radius: 24px;
+	// border: none;
 }
 
 .reset-button-container {
@@ -54,39 +85,40 @@ footer {
 	cursor: pointer;
 }
 
-.refresh-button {
-  border-radius: 5px;
-  border-color: #e0dcdc;
-  background-color: #e0dcdc;
-  cursor: pointer;
-}
-
 .home-screen {
   text-align: center;
   background-color: #faf6ee;
-  // position: fixed;
-  // top: 50%;
-  // left: 50%;
-  // margin-top: -320px;
-  // margin-left: -280px;
-  // width: 560px;
-  // height: 640px;
+	background-color: #faf6ee;
+	position: absolute;
+	margin-top: 0px;
+	top: 39px;
+	width: 40%;
+	margin: 0 30% 0 30%;
+	// height: 100%;
+	// width: 100%;
+	// margin-left: 170px;
+	// left: 50%;
+	// width: 340px;
+	// height: 920px;
 
   .rules-list {
     text-align: left;
-    padding: 5px 49px 0;
-    width: 40%;
-    margin: 0 30% 0 30%;
+    padding: 5px 52px 0;
+		font-weight: 500;
+  }
+
+	.rule {
+    font-size: 18px;
+    margin: 15px 0px;
+    line-height: 29px;
   }
 
   h1 {
-    font-size: 35px;
-    margin: 35px 10px 5px;
-  }
-  .rule {
-    font-size: 16px;
-    margin: 15px 0px;
-    line-height: 25px;
+    font-size: 40px;
+    margin: 40px 10px 8px;
+		text-transform: uppercase;
+		letter-spacing: 1px;
+		font-weight: 600;
   }
 
   .game-input {
@@ -102,12 +134,46 @@ footer {
   }
 }
 
-@media (max-width: 1000px) {
-  .rules-list {
-    text-align: center !important;
-    padding: 0 !important;
-    width: 85% !important;
-    margin: 0 auto !important;
+@media (min-width: 700px) and (max-width: 1200px) {
+  .home-screen {
+		width: 60%;
+		margin: 0 20% 0 20%;
+  }
+}
+
+@media (max-width: 700px) {
+  .home-screen {
+		width: 90%;
+		margin: 0 5% 0 5%;
+  }
+
+	.rule {
+		text-align: center !important;
+    font-size: .9em !important;
+		line-height: 20px !important;
+  }
+}
+
+@media only screen and (min-width: 700px) and (max-width: 1200px) {
+  .home-screen {
+		width: 60%;
+		margin: 0 20% 0 20%;
+		max-width: 1200px;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .home-screen {
+		overflow-x: hidden;
+		width: 90%;
+		margin: 0 5% 0 5%;
+		max-width: 700px;
+  }
+
+	.rule {
+		text-align: center !important;
+    font-size: .9em !important;
+		line-height: 20px !important;
   }
 }
 
@@ -295,7 +361,7 @@ footer {
 
 .start-button-container {
   text-align: center;
-  font-family: 'apercu-bold', sans-serif;
+  font-family: 'Geogrotesque-Bold', sans-serif;
   font-size: 3em;
   margin-top: 7%;
 }
@@ -314,7 +380,7 @@ footer {
 .countdown-timer {
   text-align: center;
   border-radius: 25px;
-  font-family: 'apercu-bold', sans-serif;
+  font-family: 'Geogrotesque-Bold', sans-serif;
   font-weight: lighter;
   font-size: 3em;
 }
@@ -324,7 +390,7 @@ footer {
 }
 
 .outer-div {
-  font-family: 'apercu-bold', sans-serif;
+  font-family: 'Geogrotesque-Bold', sans-serif;
   font-weight: lighter;
 
   .entry-name {

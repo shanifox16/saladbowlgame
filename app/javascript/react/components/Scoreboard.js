@@ -27,6 +27,7 @@ export const Scoreboard = (props) => {
   const url = props.match.params.url
   const nameTerm = "name"
   const nameTerms = "names"
+  const gameOverSound = new Audio("https://freesound.org/data/previews/270/270402_5123851-lq.mp3")
 
   useEffect(() => {
     fetch(`/api/v1/games/${url}/notifications`)
@@ -52,6 +53,7 @@ export const Scoreboard = (props) => {
         setTurnInProgress(data.turn_in_progress)
         location.reload()
       }
+
       setSecondsRemaining(data.seconds_remaining)
       setRedScoreRoundOne(data.red_score_round_one.length)
       setRedScoreRoundTwo(data.red_score_round_two.length)
@@ -192,8 +194,10 @@ export const Scoreboard = (props) => {
 
   const renderCountdown = () => {
     if (!turnInProgress && secondsRemaining !== 1000) {
-      if (secondsRemaining < 60000) {
+      if (secondsRemaining < 60000 && secondsRemaining > 9000) {
         return <p className="scoreboard-header scoreboard-timer">:{secondsRemaining/1000}</p>
+      } else if (secondsRemaining < 60000) {
+        return <p className="scoreboard-header scoreboard-timer">:0{secondsRemaining/1000}</p>
       } else {
         return <p className="scoreboard-header scoreboard-timer">01:00</p>
       }

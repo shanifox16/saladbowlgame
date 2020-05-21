@@ -157,6 +157,9 @@ export const Home = (props) => {
     <span>
       <div id="background" className="background">
       </div>
+      <header>
+        <a href="/privacypolicy" target="_blank">Privacy Policy</a>
+      </header>
       <div className="home-screen">
         <h1>Salad Bowl!</h1>
 
@@ -226,9 +229,6 @@ export const Home = (props) => {
           </form>
         )}
       </div>
-      <footer>
-        <a href="/privacypolicy" target="_blank">Privacy Policy</a>
-      </footer>
     </span>
   )
 }

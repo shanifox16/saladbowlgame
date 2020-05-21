@@ -19,6 +19,7 @@ export const MyTurn = (props) => {
   const buzzer = new Audio("https://freesound.org/data/previews/414/414208_6938106-lq.mp3")
   const startingSound = new Audio("https://freesound.org/data/previews/368/368691_4930962-lq.mp3")
   const gotItSound = new Audio("https://freesound.org/data/previews/126/126418_1666767-lq.mp3")
+  const roundCompleteSound = new Audio("https://freesound.org/data/previews/270/270404_5123851-lq.mp3")
   const url = props.match.params.url
 
   useEffect(() => {
@@ -170,6 +171,7 @@ export const MyTurn = (props) => {
                 })
                 .then(response => response.json())
                 .catch(error => console.error(`Error in fetch: ${error.message}`))
+                roundCompleteSound.play()
                 correct = 0
                 setTimeout(() => setTimesUp(true), 1000)
               } else {
