@@ -1,21 +1,21 @@
 @font-face {
 	font-family: 'Geogrotesque-Bold';
-	src: url('../fonts/Geogrotesque-Bold.otf');
+	src: image-url('../fonts/Geogrotesque-Bold.otf');
 }
 
 @font-face {
 	font-family: 'Geogrotesque-Medium';
-	src: url('../fonts/Geogrotesque-Medium.otf');
+	src: image-url('../fonts/Geogrotesque-Medium.otf');
 }
 
 @font-face {
 	font-family: 'Geogrotesque-Regular';
-	src: url('../fonts/Geogrotesque-Regular.otf');
+	src: image-url('../fonts/Geogrotesque-Regular.otf');
 }
 
 @font-face {
 	font-family: 'GEOGROTESQUE-SEMIBOLD';
-	src: url('../fonts/GEOGROTESQUE-SEMIBOLD.otf');
+	src: image-url('../fonts/GEOGROTESQUE-SEMIBOLD.otf');
 }
 
 body, h1, h2, h3, h4, h5, h6 {
@@ -195,55 +195,55 @@ header {
   position: absolute;
 }
 .top-left {
-  background-image: url('top-left.svg');
+  background-image: image-url('top-left.svg');
   background-position: 0 0;
   left: 0px;
   top: 0px;
 }
 .top-middle {
-  background-image: url('top-middle.svg');
+  background-image: image-url('top-middle.svg');
   background-position: 0 0;
   left: 80px;
   top: 0px;
 }
 .top-right {
-  background-image: url('top-right.svg');
+  background-image: image-url('top-right.svg');
   background-position: 0 0;
   left: 160px;
   top: 0px;
 }
 .middle-left {
-  background-image: url('middle-left.svg');
+  background-image: image-url('middle-left.svg');
   background-position: 0 0;
   left: 0px;
   top: 80px;
 }
 .middle-middle {
-  background-image: url('middle-middle.svg');
+  background-image: image-url('middle-middle.svg');
   background-position: 0 0;
   left: 80px;
   top: 80px;
 }
 .middle-right {
-  background-image: url('middle-right.svg');
+  background-image: image-url('middle-right.svg');
   background-position: 0 0;
   left: 160px;
   top: 80px;
 }
 .bottom-left {
-  background-image: url('bottom-left.svg');
+  background-image: image-url('bottom-left.svg');
   background-position: 0 0;
   left: 0px;
   top: 160px;
 }
 .bottom-middle {
-  background-image: url('bottom-middle.svg');
+  background-image: image-url('bottom-middle.svg');
   background-position: 0 0;
   left: 80px;
   top: 160px;
 }
 .bottom-right {
-  background-image: url('bottom-right.svg');
+  background-image: image-url('bottom-right.svg');
   background-position: 0 0;
   left: 160px;
   top: 160px;
