@@ -21,6 +21,7 @@ export const MyTurn = (props) => {
   const gotItSound = new Audio("https://freesound.org/data/previews/126/126418_1666767-lq.mp3")
   const roundCompleteSound = new Audio("https://freesound.org/data/previews/270/270404_5123851-lq.mp3")
   const url = props.match.params.url
+  const [muteAudio, setMuteAudio] = useState(false)
 
   useEffect(() => {
     fetch(`/api/v1/games/${url}/entries`)
@@ -78,7 +79,9 @@ export const MyTurn = (props) => {
     if (remainingTime <= 1000) {
       remainingTime = turnLength
     }
-    startingSound.play()
+    if (!muteAudio) {
+      startingSound.play()
+    }
     time = Date.now() + remainingTime
     console.log(`Time to send as countdownTime: ${time}`)
     fetch(`/api/v1/games/${url}`, {
@@ -104,7 +107,9 @@ export const MyTurn = (props) => {
 
   const handleCorrect = event => {
     event.preventDefault()
-    gotItSound.play()
+    if (!muteAudio) {
+      gotItSound.play()
+    }
     if (event.type === "click" || (event.type === "keydown" && event.key === "Enter")) {
       fetch(`/api/v1/games/${url}/entries/${currentEntry.id}`, {
         credentials: "same-origin",
@@ -171,7 +176,9 @@ export const MyTurn = (props) => {
                 })
                 .then(response => response.json())
                 .catch(error => console.error(`Error in fetch: ${error.message}`))
-                roundCompleteSound.play()
+                if (!muteAudio) {
+                  roundCompleteSound.play()
+                }
                 correct = 0
                 setTimeout(() => setTimesUp(true), 1000)
               } else {
@@ -219,7 +226,9 @@ export const MyTurn = (props) => {
   }
 
   const timesUpFunction = () => {
-    buzzer.play()
+    if (!muteAudio) {
+      buzzer.play()
+    }
     fetch(`/api/v1/games/${url}/teams/1`, {
       credentials: "same-origin",
       method: 'PATCH',
@@ -297,9 +306,21 @@ export const MyTurn = (props) => {
       <div></div>
       <div>
         {!gameStarted && (
-          <form className="start-button-container" onSubmit={handleStart}>
-            <input className="submit-button start-button" type="submit" value="START" />
-          </form>
+          <div>
+            <form className="start-button-container" onSubmit={handleStart}>
+              <input className="submit-button start-button" type="submit" value="START" />
+              {!muteAudio && (
+                <div>
+                  <i className="fas fa-volume-up" onClick={() => setMuteAudio(true)}></i>
+                </div>
+              )}
+              {muteAudio && (
+                <div>
+                  <i className="fas fa-volume-mute" onClick={() => setMuteAudio(false)}></i>
+                </div>
+              )}
+            </form>
+          </div>
         )}
         {gameStarted && currentEntry && (
           <div className="my-turn-container">
@@ -313,9 +334,8 @@ export const MyTurn = (props) => {
             />
 
             <div className="outer-div grid-x grid-margin-x" >
-              <div className="cell large-2 medium-0 small-0"></div>
-              <div className="cell large-2 medium-12 small-12 details">
-                <div className="details-number">{skippedAnswers.length}</div>
+              <div className="cell large-3 medium-12 small-12 details left-details">
+                <div className="details-number left-details-number">{skippedAnswers.length}</div>
                 <div>skipped</div>
               </div>
               <div className="cell large-4 medium-12 small-12 entry-name">
@@ -328,11 +348,10 @@ export const MyTurn = (props) => {
                   <button disabled={isButtonDisabled} onClick={handleCorrect} tabIndex="0" autofocus type="button" className="correct-button">Got it!</button>
                 </div>
               </div>
-              <div className="cell large-2 medium-12 small-12 details">
-                <div className="details-number">{correct}</div>
+              <div className="cell large-3 medium-12 small-12 details right-details">
+                <div className="details-number right-details-number">{correct}</div>
                 <div>correct</div>
               </div>
-              <div className="cell large-2 medium-0 small-0"></div>
             </div>
           </div>
         )}

@@ -29,7 +29,6 @@ body, h1, h2, h3, h4, h5, h6 {
   background-blend-mode: lighten;
 	color: #292412;
 	-webkit-font-smoothing: antialiased;
-	// New from Liat:
 	margin: 0;
 	font-family: 'Geogrotesque-Regular', sans-serif !important;
 	height: 882px;
@@ -56,21 +55,20 @@ header {
 
 .submit-button {
   font-size: 20px;
-  font-weight: bold;
+	font-family: "Geogrotesque-Regular";
+  font-weight: 600;
   min-width: 176px;
 	cursor: pointer;
-	// New from Liat:
-  margin: 20px;
-	padding: 10px;
-	border-radius: 5px;
-	border-color: #ff9e9d;
-	background-color: #ff9e9d;
-	// background-color: #7FBB48;
-	// color: #faf6ee;
-	// padding: 12px;
-  // margin: 22px;
-	// border-radius: 24px;
-	// border: none;
+  margin: 17px;
+	padding: 12px;
+	border-radius: 26px;
+	border: none;
+	background-color: #7FBB48;
+	color: #faf6ee;
+}
+
+.fas {
+	cursor: pointer;
 }
 
 .reset-button-container {
@@ -92,14 +90,8 @@ header {
 	position: absolute;
 	margin-top: 0px;
 	top: 39px;
-	width: 40%;
-	margin: 0 30% 0 30%;
-	// height: 100%;
-	// width: 100%;
-	// margin-left: 170px;
-	// left: 50%;
-	// width: 340px;
-	// height: 920px;
+	width: 36%;
+	margin: 0 32% 0 32%;
 
   .rules-list {
     text-align: left;
@@ -108,7 +100,7 @@ header {
   }
 
 	.rule {
-    font-size: 18px;
+    font-size: 15px;
     margin: 15px 0px;
     line-height: 29px;
   }
@@ -127,6 +119,7 @@ header {
 
   .home-button {
     margin: 10px;
+		background-color: #292412;
   }
 
   .cancel-button {
@@ -156,9 +149,10 @@ header {
 
 @media only screen and (min-width: 700px) and (max-width: 1200px) {
   .home-screen {
-		width: 60%;
-		margin: 0 20% 0 20%;
+		width: 50%;
+		margin: 0 25% 0 25%;
 		max-width: 1200px;
+		font-size: 14px;
   }
 }
 
@@ -260,6 +254,12 @@ header {
 	text-align: left;
 }
 
+@media (max-width: 1024px) {
+  .round-rules {
+		text-align: center;
+  }
+}
+
 .scoreboard-header {
 	font-size: 2em;
 }
@@ -270,7 +270,7 @@ header {
 
 .score-table {
   border-color: black;
-  width: 380;
+  width: 380px;
 	font-size: 1.6em;
 	background: #F1EDE4;
 	border: #292412;
@@ -297,6 +297,10 @@ header {
 
 	.red-column {
 		width: 145px;
+	}
+
+	.small-column {
+		width: 45px;
 	}
 
 	.timer-red {
@@ -362,7 +366,6 @@ header {
 .start-button-container {
   text-align: center;
   font-family: 'Geogrotesque-Bold', sans-serif;
-  font-size: 3em;
   margin-top: 7%;
 }
 
@@ -430,8 +433,8 @@ header {
     }
 
     .correct-button {
-      background-color: #608EC8;
-      color: white;
+			background-color: #7FBB48;
+    	color: #faf6ee;
       border-radius: 25px;
     }
   }
@@ -446,6 +449,24 @@ header {
     font-size: 2.5em;
     margin: -15px;
   }
+
+	@media (min-width: 1024px) {
+		.right-details {
+			text-align: left;
+		}
+
+		.right-details-number {
+			padding-left: 30px;
+		}
+
+		.left-details {
+			text-align: right;
+		}
+
+		.left-details-number {
+			padding-right: 30px;
+		}
+	}
 
   @media (max-width: 1000px) {
     .entry-name {

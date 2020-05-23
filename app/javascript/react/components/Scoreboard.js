@@ -242,7 +242,7 @@ export const Scoreboard = (props) => {
   const roundRules = () => {
     if (currentRound === 0) {
       return (
-        <span className="round-rules">
+        <span className="round-rules cell large-4 medium-12 small-12">
           <h5><strong>PREPARE FOR ROUND 1</strong></h5>
           <p>The <strong>{currentTeam}</strong> team will go first</p>
           <p>Once all players have finished submitting 5 {nameTerms}, the first player should click &quot;My Turn&quot;</p>
@@ -253,7 +253,7 @@ export const Scoreboard = (props) => {
     }
     if (currentRound === 1) {
       return (
-        <span className="round-rules">
+        <span className="round-rules cell large-4 medium-12 small-12">
           <h5><strong>ROUND 1</strong></h5>
           <p>Use words (no hand gestures) to get your teammates to guess the {nameTerm}, without saying it yourself. Teams will alternate until all {nameTerms} have been guessed.</p>
           {myTurnButton()}
@@ -261,7 +261,7 @@ export const Scoreboard = (props) => {
       )
     } else if (currentRound === 2) {
       return (
-        <span className="round-rules">
+        <span className="round-rules cell large-4 medium-12 small-12">
           <h5><strong>ROUND 2</strong></h5>
           <p>In this round, the player giving clues tries to get their teammates to guess each name, without saying the name itself. They can only say <strong>one</strong> word for each clue. They can repeat the words as many times as desired (or even sing it).</p>
           {myTurnButton()}
@@ -269,7 +269,7 @@ export const Scoreboard = (props) => {
       )
     } else if (currentRound === 3) {
       return (
-        <span className="round-rules">
+        <span className="round-rules cell large-4 medium-12 small-12">
           <h5><strong>ROUND 3</strong></h5>
           <p>Charades! (no talking allowed)</p>
           {myTurnButton()}
@@ -277,7 +277,7 @@ export const Scoreboard = (props) => {
       )
     } else {
       return (
-        <span className="round-rules">
+        <span className="round-rules cell large-4 medium-12 small-12">
           <h5><strong>GAME OVER</strong></h5>
           {redScoreTotal === blueScoreTotal ? (
             <p>No way! It's a tie!</p>
@@ -311,22 +311,22 @@ export const Scoreboard = (props) => {
           <td className="half-column small-text">Blue score</td>
         </tr>
         <tr>
-          <td className="small-text">R1</td>
+          <td className="small-column small-text">R1</td>
           <td className={`red-column ${getCurrentTeamRound() === "R1" ? "R1" : ""}`}>{redScoreRoundOne}</td>
           <td className={`half-column ${getCurrentTeamRound() === "B1" ? "B1" : ""}`}>{blueScoreRoundOne}</td>
         </tr>
         <tr>
-          <td className="small-text">R2</td>
+          <td className="small-column small-text">R2</td>
           <td className={`red-column ${getCurrentTeamRound() === "R2" ? "R2" : ""}`}>{redScoreRoundTwo}</td>
           <td className={`half-column ${getCurrentTeamRound() === "B2" ? "B2" : ""}`}>{blueScoreRoundTwo}</td>
         </tr>
         <tr>
-          <td className="small-text">R3</td>
+          <td className="small-column small-text">R3</td>
           <td className={`red-column ${getCurrentTeamRound() === "R3" ? "R3" : ""}`}>{redScoreRoundThree}</td>
           <td className={`half-column ${getCurrentTeamRound() === "B3" ? "B3" : ""}`}>{blueScoreRoundThree}</td>
         </tr>
         <tr>
-          <td className="small-text">Total</td>
+          <td className="small-column small-text">Total</td>
           <td className="red-column">{redScoreTotal}</td>
           <td className="half-column">{blueScoreTotal}</td>
         </tr>

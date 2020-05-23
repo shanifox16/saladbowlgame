@@ -172,8 +172,8 @@ export const Home = (props) => {
 
         {gameAction === "none" && (
           <span>
-            <button onClick={() => setGameAction("join")} type="button" className="submit-button">Join Game</button>
-            <button onClick={() => setGameAction("create")} type="button" className="submit-button">Create New Game</button>
+            <button onClick={() => setGameAction("join")} type="button" className="submit-button home-button">Join Game</button>
+            <button onClick={() => setGameAction("create")} type="button" className="submit-button home-button">Create New Game</button>
           </span>
         )}
         <ErrorList
