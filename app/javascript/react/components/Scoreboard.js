@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import Countdown from 'react-countdown';
+import MidgameScoreboard from "./MidgameScoreboard"
 
 let scoreboardTime = 59000
 
@@ -136,7 +136,6 @@ export const Scoreboard = (props) => {
 
   if (redirectPath) {
     return <Redirect to={`/game/${url}${redirectPath}`} />
-    // window.location.href = `/game/${url}${redirectPath}`
   }
 
   if (totalEntries === 0) {
@@ -190,43 +189,6 @@ export const Scoreboard = (props) => {
 
   const onTickFunction = () => {
     scoreboardTime -= 1
-  }
-
-  const renderCountdown = () => {
-    if (!turnInProgress && secondsRemaining !== 1000) {
-      if (secondsRemaining < 60000 && secondsRemaining > 9000) {
-        return <p className="scoreboard-header scoreboard-timer">:{secondsRemaining/1000}</p>
-      } else if (secondsRemaining < 60000) {
-        return <p className="scoreboard-header scoreboard-timer">:0{secondsRemaining/1000}</p>
-      } else {
-        return <p className="scoreboard-header scoreboard-timer">01:00</p>
-      }
-    }
-    return (
-      <Countdown
-        start={turnInProgress}
-        onTick={onTickFunction}
-        key={2}
-        date={scoreboardTime}
-        renderer={timeFormat}
-      />
-    )
-  }
-
-  const getCurrentTeamRound = () => {
-    if (currentTeam === "Red" && currentRound === 1) {
-      return "R1"
-    } else if (currentTeam === "Red" && currentRound === 2) {
-      return "R2"
-    } else if (currentTeam === "Red" && currentRound === 3) {
-      return "R3"
-    } else if (currentTeam === "Blue" && currentRound === 1) {
-      return "B1"
-    } else if (currentTeam === "Blue" && currentRound === 2) {
-      return "B2"
-    } else if (currentTeam === "Blue" && currentRound === 3) {
-      return "B3"
-    }
   }
 
   const myTurnButton = () => {
@@ -292,48 +254,6 @@ export const Scoreboard = (props) => {
     }
   }
 
-  const midgameScoreboard = (
-    <table className="score-table cell small-12 medium-6 large-4">
-      <thead>
-        <tr>
-          <th className={currentTeam === "Red" ? "timer-red" : "timer-blue"} colspan="2">
-            <span className="small-text half-column beige-text">Time</span><br/>
-            {renderCountdown()}
-          </th>
-          <th><span className="small-text half-column">Names Left</span><br/>
-            <p className="scoreboard-header">{entriesLeftInRound}</p>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td colspan="2" className="half-column small-text">Red score</td>
-          <td className="half-column small-text">Blue score</td>
-        </tr>
-        <tr>
-          <td className="small-column small-text">R1</td>
-          <td className={`red-column ${getCurrentTeamRound() === "R1" ? "R1" : ""}`}>{redScoreRoundOne}</td>
-          <td className={`half-column ${getCurrentTeamRound() === "B1" ? "B1" : ""}`}>{blueScoreRoundOne}</td>
-        </tr>
-        <tr>
-          <td className="small-column small-text">R2</td>
-          <td className={`red-column ${getCurrentTeamRound() === "R2" ? "R2" : ""}`}>{redScoreRoundTwo}</td>
-          <td className={`half-column ${getCurrentTeamRound() === "B2" ? "B2" : ""}`}>{blueScoreRoundTwo}</td>
-        </tr>
-        <tr>
-          <td className="small-column small-text">R3</td>
-          <td className={`red-column ${getCurrentTeamRound() === "R3" ? "R3" : ""}`}>{redScoreRoundThree}</td>
-          <td className={`half-column ${getCurrentTeamRound() === "B3" ? "B3" : ""}`}>{blueScoreRoundThree}</td>
-        </tr>
-        <tr>
-          <td className="small-column small-text">Total</td>
-          <td className="red-column">{redScoreTotal}</td>
-          <td className="half-column">{blueScoreTotal}</td>
-        </tr>
-      </tbody>
-    </table>
-  )
-
   return (
     <div>
     {loading ? (
@@ -362,7 +282,24 @@ export const Scoreboard = (props) => {
           <div class="grid-container">
             <div className="grid-x grid-margin-x">
               {roundRules()}
-              {midgameScoreboard}
+              <MidgameScoreboard
+                currentTeam={currentTeam}
+                entriesLeftInRound={entriesLeftInRound}
+                redScoreRoundOne={redScoreRoundOne}
+                blueScoreRoundOne={blueScoreRoundOne}
+                redScoreRoundTwo={redScoreRoundTwo}
+                blueScoreRoundTwo={blueScoreRoundTwo}
+                redScoreRoundThree={redScoreRoundThree}
+                blueScoreRoundThree={blueScoreRoundThree}
+                redScoreTotal={redScoreTotal}
+                blueScoreTotal={blueScoreTotal}
+                turnInProgress={turnInProgress}
+                secondsRemaining={secondsRemaining}
+                onTickFunction={onTickFunction}
+                scoreboardTime={scoreboardTime}
+                timeFormat={timeFormat}
+                currentRound={currentRound}
+              />
               <Fragment>
                 {playerTable}
               </Fragment>

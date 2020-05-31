@@ -131,66 +131,58 @@ export const MyTurn = (props) => {
       })
       .then(response => response.json())
       .then(body => {
-        if (!!body.id) {
-          correct += 1
-          let entryList = entries.filter(entry => entry.id !== currentEntry.id)
-          if (entryList.length > 0) {
-            setEntries(entryList)
-            getRandomEntry(entryList)
-          } else if (skippedAnswers.length > 0) {
-            setEntries(skippedAnswers)
-            setSkippedAnswers([])
-            getRandomEntry(skippedAnswers)
-          } else {
-            fetch(`/api/v1/games/${url}/rounds/1`, {
+        correct += 1
+        let entryList = entries.filter(entry => entry.id !== currentEntry.id)
+        if (entryList.length > 0) {
+          setEntries(entryList)
+          getRandomEntry(entryList)
+        } else if (skippedAnswers.length > 0) {
+          setEntries(skippedAnswers)
+          setSkippedAnswers([])
+          getRandomEntry(skippedAnswers)
+        } else {
+          fetch(`/api/v1/games/${url}/rounds/1`, {
+            credentials: "same-origin",
+            method: 'PATCH',
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json"
+            }
+          })
+          .then(response => {
+            if (response.ok) {
+              return response;
+            } else {
+              let errorMessage = `${response.status} (${response.statusText})`,
+              error = new Error(errorMessage);
+              throw(error);
+            }
+          })
+          .then(response => response.json())
+          .then(body => {
+            fetch(`/api/v1/games/${url}`, {
               credentials: "same-origin",
               method: 'PATCH',
+              body: JSON.stringify({
+                "remainingTime": remainingTime,
+                "turnInProgress": false
+              }),
               headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json"
               }
             })
-            .then(response => {
-              if (response.ok) {
-                return response;
-              } else {
-                let errorMessage = `${response.status} (${response.statusText})`,
-                error = new Error(errorMessage);
-                throw(error);
-              }
-            })
             .then(response => response.json())
-            .then(body => {
-              if (!!body.id) {
-                fetch(`/api/v1/games/${url}`, {
-                  credentials: "same-origin",
-                  method: 'PATCH',
-                  body: JSON.stringify({
-                    "remainingTime": remainingTime,
-                    "turnInProgress": false
-                  }),
-                  headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json"
-                  }
-                })
-                .then(response => response.json())
-                .catch(error => console.error(`Error in fetch: ${error.message}`))
-                if (!muteAudio) {
-                  roundCompleteSound.play()
-                }
-                correct = 0
-                setTimeout(() => setTimesUp(true), 1000)
-              } else {
-                alert("Yikes, we couldn't record your answer. That's our bad.")
-              }
-            })
             .catch(error => console.error(`Error in fetch: ${error.message}`))
+            if (!muteAudio) {
+              roundCompleteSound.play()
+            }
             correct = 0
             setTimeout(() => setTimesUp(true), 1000)
-          }
-        } else {
-          alert("Yikes, we couldn't record your answer. That's our bad.")
+          })
+          .catch(error => console.error(`Error in fetch: ${error.message}`))
+          correct = 0
+          setTimeout(() => setTimesUp(true), 1000)
         }
       })
       .catch(error => console.error(`Error in fetch: ${error.message}`))
@@ -305,24 +297,7 @@ export const MyTurn = (props) => {
     <span>
       <div></div>
       <div>
-        {!gameStarted && (
-          <div>
-            <form className="start-button-container" onSubmit={handleStart}>
-              <input className="submit-button start-button" type="submit" value="START" />
-              {!muteAudio && (
-                <div>
-                  <i className="fas fa-volume-up" onClick={() => setMuteAudio(true)}></i>
-                </div>
-              )}
-              {muteAudio && (
-                <div>
-                  <i className="fas fa-volume-mute" onClick={() => setMuteAudio(false)}></i>
-                </div>
-              )}
-            </form>
-          </div>
-        )}
-        {gameStarted && currentEntry && (
+        {(gameStarted && currentEntry) ? (
           <div className="my-turn-container">
             <Countdown
               start={startTimer}
@@ -353,6 +328,22 @@ export const MyTurn = (props) => {
                 <div>correct</div>
               </div>
             </div>
+          </div>
+        ) : (
+          <div>
+            <form className="start-button-container" onSubmit={handleStart}>
+              <input className="submit-button start-button" type="submit" value="START" />
+              {!muteAudio && (
+                <div>
+                  <i className="fas fa-volume-up" onClick={() => setMuteAudio(true)}></i>
+                </div>
+              )}
+              {muteAudio && (
+                <div>
+                  <i className="fas fa-volume-mute" onClick={() => setMuteAudio(false)}></i>
+                </div>
+              )}
+            </form>
           </div>
         )}
       </div>
